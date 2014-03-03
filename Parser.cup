@@ -10,8 +10,10 @@ program ::= decllist main decllist	{: System.out.println("-------end of parsing-
 	;
 
 decllist ::= 
+	;
 
 decl ::= 
+	;
 
 main ::= VOID MAIN LBRACE exprlist RBRACE
 	;
@@ -19,7 +21,10 @@ main ::= VOID MAIN LBRACE exprlist RBRACE
 exprlist ::=
 
 funcdef ::= DEF type ID LPAREN paramlist RPAREN LBRACE exprlist RBRACE
+	;
 
 type ::= CHAR|BOOLEAN|INT|FLOAT|STRING|LIST|DICT //list of different types for function return
+	;
 
 paramlist ::= //parsing of parameters to a function
+	;
