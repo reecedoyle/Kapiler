@@ -2,29 +2,81 @@ package Kapiler
 
 import java_cup.runtime.*;
 
-terminal TEF, DEF, VOID, IN, IF, ELSE, FOREACH, WHILE, DO, RETURN, READ, PRINT, CHAR, BOOLEAN, INT, FLOAT, STRING, LIST, DICT, MAIN, LPAREN, RPAREN, LBRACE, RBRACE, LBRACK, RBRACK, LDICT, RDICT, SEMI, COMMA, DOT, EQ, EXCLAMATION, AND, PLUS, MINUS, MULT, DIV, POW, CONCAT, LT, LTEQ, NOTEQ, COLON, BOOLEAN_LITERAL, INTEGER_LITERAL, FLOAT_LITERAL, ID, STRING_LITERAL, CHARACTER_LITERAL;
+terminal TDEF, DEF, VOID, IN, IF, ELSE, FOREACH, WHILE, DO, RETURN, READ, PRINT, CHAR, BOOLEAN, INT, FLOAT, STRING, LIST, DICT, MAIN, LPAREN, RPAREN, LBRACE, RBRACE, LBRACK, RBRACK, LDICT, RDICT, SEMI, COMMA, DOT, EQ, EXCLAMATION, AND, PLUS, MINUS, MULT, DIV, POW, CONCAT, LT, LTEQ, NOTEQ, COLON, BOOLEAN_LITERAL, INTEGER_LITERAL, FLOAT_LITERAL, ID, STRING_LITERAL, CHARACTER_LITERAL;
 
-non terminal program, main, decllist, exprlist, funcdef;
+non terminal program, main, decllist, exprlist, funcdef, typedef, vardef;
 
-program ::= decllist main decllist	{: System.out.println("-------end of parsing-------"); :}
+program		::= decllist main decllist	{: System.out.println("-------end of parsing-------"); :}
 	;
 
-decllist ::= 
+decllist	::= decllist decl
+			| 
 	;
 
-decl ::= 
+decl		::= funcdef
+			| vardef
+			| typedef
 	;
 
-main ::= VOID MAIN LBRACE exprlist RBRACE
+main		::= VOID MAIN LBRACE exprlist RBRACE
 	;
 
-exprlist ::=
-
-funcdef ::= DEF type ID LPAREN paramlist RPAREN LBRACE exprlist RBRACE
+exprlist	::=
 	;
 
-type ::= CHAR|BOOLEAN|INT|FLOAT|STRING|LIST|DICT //list of different types for function return
+funcdef		::= DEF type ID LPAREN paramlist RPAREN LBRACE exprlist RBRACE
 	;
 
-paramlist ::= //parsing of parameters to a function
+vardef		::= type ID varinit SEMI
+	;
+
+varainit	::= EQ varassign
+			|
+	;
+
+varassign	::= value
+			| dictassign
+			| listassign
+	;
+
+dictassign	::= LDICT dictvals RDICT SEMI
+	;
+
+dictvals	::= dictval COMMA dictvals // need to change this to left-recursive?
+			|
+	;
+
+dictval 	::= value COLON value
+	;
+
+listassign	::=
+	;
+
+typedef		::= TDEF ID COLON typefields SEMI
+	;
+
+typefields	::= typefields typefield
+			| typefield
+	;
+
+typefield	::= ID COLON type
+
+type		::= CHAR //list of different types for function return
+			| BOOLEAN
+			| INT
+			| FLOAT
+			| STRING
+			| LIST
+			| DICT
+			| ID // to account for user-defined types
+	;
+
+value		::= CHARACTER_LITERAL
+			| BOOLEAN_LITERAL
+			| INTEGER_LITERAL
+			| FLOAT_LITERAL
+			| STRING_LITERAL
+	;
+
+paramlist	::= //parsing of parameters to a function
 	;
