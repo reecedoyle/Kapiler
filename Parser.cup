@@ -4,9 +4,14 @@ import java_cup.runtime.*;
 
 terminal TEF, DEF, VOID, IN, IF, ELSE, FOREACH, WHILE, DO, RETURN, READ, PRINT, CHAR, BOOLEAN, INT, FLOAT, STRING, LIST, DICT, MAIN, LPAREN, RPAREN, LBRACE, RBRACE, LBRACK, RBRACK, LDICT, RDICT, SEMI, COMMA, DOT, EQ, EXCLAMATION, AND, PLUS, MINUS, MULT, DIV, POW, CONCAT, LT, LTEQ, NOTEQ, COLON, BOOLEAN_LITERAL, INTEGER_LITERAL, FLOAT_LITERAL, ID, STRING_LITERAL, CHARACTER_LITERAL;
 
-non terminal 
+non terminal program, main, decllist, exprlist, ;
 
 program ::= decllist main decllist	{: System.out.println("-------end of parsing-------"); :}
 	;
 
 decllist ::= 
+
+decl ::= 
+
+main ::= VOID MAIN LBRACE exprlist RBRACE
+	;
