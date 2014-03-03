@@ -4,7 +4,7 @@ import java_cup.runtime.*;
 
 terminal TEF, DEF, VOID, IN, IF, ELSE, FOREACH, WHILE, DO, RETURN, READ, PRINT, CHAR, BOOLEAN, INT, FLOAT, STRING, LIST, DICT, MAIN, LPAREN, RPAREN, LBRACE, RBRACE, LBRACK, RBRACK, LDICT, RDICT, SEMI, COMMA, DOT, EQ, EXCLAMATION, AND, PLUS, MINUS, MULT, DIV, POW, CONCAT, LT, LTEQ, NOTEQ, COLON, BOOLEAN_LITERAL, INTEGER_LITERAL, FLOAT_LITERAL, ID, STRING_LITERAL, CHARACTER_LITERAL;
 
-non terminal program, main, decllist, exprlist, ;
+non terminal program, main, decllist, exprlist, funcdef;
 
 program ::= decllist main decllist	{: System.out.println("-------end of parsing-------"); :}
 	;
@@ -15,3 +15,11 @@ decl ::=
 
 main ::= VOID MAIN LBRACE exprlist RBRACE
 	;
+
+exprlist ::=
+
+funcdef ::= DEF type ID LPAREN paramlist RPAREN LBRACE exprlist RBRACE
+
+type ::= CHAR|BOOLEAN|INT|FLOAT|STRING|LIST|DICT //list of different types for function return
+
+paramlist ::= //parsing of parameters to a function
