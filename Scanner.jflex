@@ -25,7 +25,7 @@ import java_cup.runtime.*;
 %eofval}
 
 /* MACROS */
-LineTerminator 		= \r\n?|\n // both to deal with variety of OSs
+LineTerminator 		= \r\n?|\n
 WhiteSpace 			= \s*
 Comment 			= {EndOfLineComment} | {MultiLineComment}
 EndOfLineComment	= "//".*
@@ -65,6 +65,7 @@ SingleCharacter		= [^\r\n\'\\]
 	"string"		{ return symbol(sym.STRING);}
 	"list"			{ return symbol(sym.LIST);}
 	"dict"			{ return symbol(sym.DICT);}
+	"main"			{ return symbol(sym.MAIN);}
 
 	/* SEPARATORS */
 	"("				{ return symbol(sym.LPAREN);}
@@ -75,7 +76,7 @@ SingleCharacter		= [^\r\n\'\\]
 	"]"				{ return symbol(sym.RBRACK);}
 	"[|"			{ return symbol(sym.LDICT);}
 	"|]"			{ return symbol(sym.RDICT);}
-	";"				{ return symbol(sym.SEMICOLON);}
+	";"				{ return symbol(sym.SEMI);}
 	","				{ return symbol(sym.COMMA);}
 	"."				{ return symbol(sym.DOT);}
 
@@ -118,7 +119,7 @@ SingleCharacter		= [^\r\n\'\\]
 	{WhiteSpace}		{ /* ignore */ }
 
 	/* Comments */
-	{Identifier}		{ return symbol(sym.IDENTIFIER, yytext());}
+	{Identifier}		{ return symbol(sym.ID, yytext());}
 }
 
 <STRING_STATE> {
