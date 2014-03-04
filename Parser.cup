@@ -12,18 +12,13 @@ program		::= decllist main decllist	{: System.out.println("-------end of parsing
 main		::= VOID MAIN block
 	;
 
-decllist	::= decllist decl
+decllist	::= decl decllist
 			| 
 	;
 
 decl		::= funcdef
 			| vardef
 			| typedef
-	;
-
-body	::= vardef body
-		| vareassign
-		| control_statment
 	;
 
 funcdef		::= DEF type ID LPAREN formal_param_list_opt RPAREN body
@@ -40,6 +35,8 @@ varreassign	::= ID varinit
 	;
 
 varassign	::= value
+			| dictassign
+			| listassign
 	;
 
 /*---- DICTS & LISTS ----*/ // Provisionally complete
@@ -83,22 +80,35 @@ typefields	::= typefield typefields
 typefield	::= ID COLON type
 	;
 
-type		::= CHAR //list of different types for function return
-			| BOOLEAN
-			| INT
-			| FLOAT
-			| STRING
-			| LIST
-			| DICT
-			| ID // to account for user-defined types
+type		::= primitive_type //list of different types for function return
+			| aggregate_type
+	;
+
+primitive_type	::=	CHAR
+				| BOOLEAN
+				| INT
+				| FLOAT
+	;
+
+aggregate_type	::= STRING
+				| LIST
+				| DICT
+				| ID // to account for user-defined types
 	;
 
 /*---- VALUES ----*/
-value 		::= primitive_value
-			| STRING_LITERAL
-			| boolean_value
-			| vals_from_aggs
+value 		::= prim_not_bool_value
+			| boolean_val
+			| aggregate_val
 	;
+
+prim_not_bool_value	::= numeric_val
+					| char_val
+	;
+
+char_val	::= CHAR_LITERAL
+			| val_from_index
+			| ID
 
 numeric_val	::= INTEGER_LITERAL // literals
 			| FLOAT_LITERAL
@@ -113,18 +123,28 @@ boolean_val ::= BOOLEAN_LITERAL
 			| ID
 	;
 
+aggregate_val	::= dict_val
+				| seq_val
+	;
+
+dict_val	::= dictassign
+			| ID
+	;
+
 seq_val		::= listassign
 			| STRING_LITERAL
 			| ID
 	;
 
-/*------------------------------------*/
 vals_from_aggs	::= numeric_vals_from_aggs
 				| vals_from_seq
 	;
 
 numeric_vals_from_aggs	::= LEN LPAREN ID RPAREN // len(d);
-						| ID LBRACK value RBRACK // a[i]; d[k];
+						| val_from_index
+	;
+
+val_from_index	::= ID LBRACK value RBRACK // a[i]; d[k];
 	;
 
 vals_from_seq	::= seq_literal CONCAT seq_literal // list :: list;
@@ -136,14 +156,9 @@ splice			::= value COLON value
 				| COLON value
 	;
 
-dict_literal	::= dictassign
-				| ID
-	;
+/*------------------------------------*/
 
-primitive_value ::= CHARACTER_LITERAL
-			| INTEGER_LITERAL
-			| FLOAT_LITERAL
-	;
+/*---- PARAMETERS ----*/
 
 formal_param_list_opt	::= type ID formal_param_list
 						|
@@ -164,9 +179,18 @@ actual_param_list	::= COMMA ID actual_param_list
 /*------------------------------------*/
 
 /*---- CONTROL STATEMENTS ----*/
-block := LBRACE body RBRACE
+block	:= LBRACE body RBRACE
 	;
 
+body	:= statement_list
+		|
+	;
+
+statement_list	::= statement statement_list
+	;
+
+statement 	::= // list possible statements & things. basically general code.
+	;
 
 control_statement ::= if_statement
 					| if_statement else_statement
@@ -174,7 +198,16 @@ control_statement ::= if_statement
 					| foreach_statement
 	;
 
-if_statement ::= IF LPAREN expr RPAREN block
+if_statement 	::= IF LPAREN expr RPAREN block
+	;
+
+else_statement 	::= ELSE block
+	;
+
+while_statement	::= WHILE LPAREN expr RPAREN DO block
+	;
+
+foreach_statement	::= FOREACH LPAREN ID COLON ID RPAREN block
 	;
 
 
@@ -197,23 +230,26 @@ dict_seq_bool_oper	::= value IN ID
 	;
 
 bool_oper ::= EQEQ
-		| NOTEQ
-		| AND
+			| NOTEQ
+			| AND
 	;
 
-prim_bool_oper	::= LT
-				| LTEQ
-				| EQEQ
+prim_not_bool_comparison	::= LT
+							| LTEQ
+							| EQEQ
+							| NOTEQ
 	;
 
 
+
+
+/*------------------------------------*/
 
 expr ::= BOOLEAN_LITERAL
 		| NOT expr
-		| primitive_value prim_bool_oper primitive_value
+		| prim_not_bool_value prim_not_bool_comparison prim_not_bool_value
 		| boolean_val bool_oper boolean_val
 	;
 
 
 
-/*------------------------------------*/
