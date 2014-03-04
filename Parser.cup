@@ -4,12 +4,12 @@ import java_cup.runtime.*;
 
 terminal TDEF, DEF, VOID, IN, IF, ELSE, FOREACH, WHILE, DO, RETURN, READ, PRINT, CHAR, BOOLEAN, INT, FLOAT, STRING, LIST, DICT, MAIN, LPAREN, RPAREN, LBRACE, RBRACE, LBRACK, RBRACK, LDICT, RDICT, SEMI, COMMA, DOT, EQ, EXCLAMATION, AND, PLUS, MINUS, MULT, DIV, POW, CONCAT, LT, LTEQ, NOTEQ, COLON, BOOLEAN_LITERAL, INTEGER_LITERAL, FLOAT_LITERAL, ID, STRING_LITERAL, CHARACTER_LITERAL;
 
-non terminal program, main, decllist, exprlist, funcdef, typedef, vardef;
+non terminal ;
 
 program		::= decllist main decllist	{: System.out.println("-------end of parsing-------"); :}
 	;
 
-main		::= VOID MAIN LBRACE exprlist RBRACE
+main		::= VOID MAIN block
 	;
 
 decllist	::= decllist decl
@@ -21,10 +21,12 @@ decl		::= funcdef
 			| typedef
 	;
 
-exprlist	::=
+body	::= vardef body
+		| vareassign
+		| control_statment
 	;
 
-funcdef		::= DEF type ID LPAREN paramlist RPAREN LBRACE exprlist RBRACE
+funcdef		::= DEF type ID LPAREN paramlist RPAREN body
 	;
 
 vardef		::= type ID varinit SEMI
@@ -68,6 +70,8 @@ listvals	::= COMMA value listvals
 
 /*------------------------------------*/
 
+/*---- TYPES ----*/
+
 typedef		::= TDEF ID COLON typefield typefields SEMI
 	;
 
@@ -92,7 +96,30 @@ value		::= CHARACTER_LITERAL
 			| INTEGER_LITERAL
 			| FLOAT_LITERAL
 			| STRING_LITERAL
+			| expr
 	;
 
 paramlist	::= //parsing of parameters to a function
 	;
+/*------------------------------------*/
+
+/*---- CONTROL STATEMENTS ----*/
+block := LBRACE body RBRACE
+
+expr := //TBC
+
+control_statement := if_statement
+					| if_statement else_statement
+					| while_statement
+					| foreach_statement
+
+if_statement := IF LPAREN expr RPAREN block
+
+
+
+/*------------------------------------*/
+
+
+/*---- OPERATORS ----*/
+
+/*------------------------------------*/
