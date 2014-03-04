@@ -98,6 +98,11 @@ type		::= CHAR //list of different types for function return
 value 		::= primitive_value
 			| STRING_LITERAL
 			| boolean_value
+			| dict_operated
+	;
+
+dict_operated	::= LEN LPAREN ID RPAREN
+				| ID LBRACK value RBRACK
 	;
 
 primitive_value ::= CHARACTER_LITERAL
@@ -140,7 +145,8 @@ numeric_operator ::= PLUS
 				   | DIV
 				   | POW
 	;
-dict_operator ::=
+
+dict_operator ::= 
 	;
 
 seq_operator ::=
