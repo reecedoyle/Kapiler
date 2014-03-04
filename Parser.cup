@@ -26,7 +26,7 @@ body	::= vardef body
 		| control_statment
 	;
 
-funcdef		::= DEF type ID LPAREN paramlist RPAREN body
+funcdef		::= DEF type ID LPAREN formal_param_list_opt RPAREN body
 	;
 
 vardef		::= type ID varinit SEMI
@@ -40,8 +40,6 @@ varreassign	::= ID varinit
 	;
 
 varassign	::= value
-			| dictassign
-			| listassign
 	;
 
 /*---- DICTS & LISTS ----*/ // Provisionally complete
@@ -49,25 +47,25 @@ varassign	::= value
 dictassign	::= LDICT dictdef RDICT
 	;
 
-dictdef		::= dictval dictvals
+dictdef		::= dictelem dictelems
 			|
 	;
 
-dictvals	::= COMMA dictval dictvals
+dictelems	::= COMMA dictelem dictelems
 			|
 	;
 
-dictval 	::= value COLON value
+dictelem 	::= value COLON value
 	;
 
 listassign	::= LBRACK listdef RBRACK
 	;
 
-listdef		::= value listvals
+listdef		::= value listelems
 			|
 	;
 
-listvals	::= COMMA value listvals
+listelems	::= COMMA value listelems
 			|
 	;
 
@@ -95,19 +93,42 @@ type		::= CHAR //list of different types for function return
 			| ID // to account for user-defined types
 	;
 
+/*---- VALUES ----*/
 value 		::= primitive_value
 			| STRING_LITERAL
 			| boolean_value
 			| vals_from_aggs
 	;
 
-vals_from_aggs	::= LEN LPAREN ID RPAREN // len(d);
-				| ID LBRACK value RBRACK // d[k];
+numeric_val	::= INTEGER_LITERAL // literals
+			| FLOAT_LITERAL
+			| MINUS numeric_val // negative numbers
+			| numeric_val numeric_oper numeric_val // operations on numbers
+			| numeric_vals_from_aggs // len(a), a[i], etc.
+			| ID
+	;
+
+boolean_val ::= BOOLEAN_LITERAL
+			| expr
+			| ID
+	;
+
+seq_val		::= listassign
+			| STRING_LITERAL
+			| ID
+	;
+
+/*------------------------------------*/
+vals_from_aggs	::= numeric_vals_from_aggs
 				| vals_from_seq
 	;
 
-vals_from_seq	::= seq_literal COLON COLON seq_literal
-				| ID LBRACK splice RBACK
+numeric_vals_from_aggs	::= LEN LPAREN ID RPAREN // len(d);
+						| ID LBRACK value RBRACK // a[i]; d[k];
+	;
+
+vals_from_seq	::= seq_literal CONCAT seq_literal // list :: list;
+				| ID LBRACK splice RBRACK // list[i:j]; list[:j]; list[i:];
 	;
 
 splice			::= value COLON value
@@ -119,17 +140,25 @@ dict_literal	::= dictassign
 				| ID
 	;
 
-seq_literal		::= listassign
-				| ID
-				| STRING_LITERAL
-	;
-
 primitive_value ::= CHARACTER_LITERAL
 			| INTEGER_LITERAL
 			| FLOAT_LITERAL
 	;
 
-paramlist	::= //parsing of parameters to a function
+formal_param_list_opt	::= type ID formal_param_list
+						|
+	;
+
+formal_param_list	::= COMMA type ID formal_param_list
+					|
+	;
+
+actual_param_list_opt	::= ID actual_param_list
+						|
+	;
+
+actual_param_list	::= COMMA ID actual_param_list
+					|
 	;
 
 /*------------------------------------*/
@@ -154,37 +183,35 @@ if_statement ::= IF LPAREN expr RPAREN block
 
 
 /*---- OPERATORS ----*/
-boolean_value ::= BOOLEAN_LITERAL
-				| expr
-    ;
 
-
-numeric_operator ::= PLUS
-				   | MINUS
-				   | MULT
-				   | DIV
-				   | POW
+numeric_oper ::= PLUS
+			| MINUS
+			| MULT
+			| DIV
+			| POW
 	;
 
-dict_seq_bool_operator ::= value IN ID
+//---- Boolean-returning operators ----//
+
+dict_seq_bool_oper	::= value IN ID
 	;
 
-bool_operator ::= EQEQ
-				| NOTEQ
-				| AND
+bool_oper ::= EQEQ
+		| NOTEQ
+		| AND
 	;
 
-prim_bool_operator ::= LT
-						| LTEQ
-						| EQEQ
+prim_bool_oper	::= LT
+				| LTEQ
+				| EQEQ
 	;
 
 
 
 expr ::= BOOLEAN_LITERAL
 		| NOT expr
-		| primitive_value prim_bool_operator primitive_value
-		| boolean_value bool_operator boolean_value
+		| primitive_value prim_bool_oper primitive_value
+		| boolean_val bool_oper boolean_val
 	;
 
 

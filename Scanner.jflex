@@ -57,6 +57,7 @@ SingleCharacter		= [^\r\n\'\\]
 	"return"		{ return symbol(sym.RETURN);}
 	"read"			{ return symbol(sym.READ);}
 	"print"			{ return symbol(sym.PRINT);}
+	"main"			{ return symbol(sym.MAIN);}
 	/* Types */
 	"char"			{ return symbol(sym.CHAR);}
 	"bool"			{ return symbol(sym.BOOLEAN);}
@@ -65,7 +66,6 @@ SingleCharacter		= [^\r\n\'\\]
 	"string"		{ return symbol(sym.STRING);}
 	"list"			{ return symbol(sym.LIST);}
 	"dict"			{ return symbol(sym.DICT);}
-	"main"			{ return symbol(sym.MAIN);}
 
 	/* SEPARATORS */
 	"("				{ return symbol(sym.LPAREN);}
