@@ -46,7 +46,7 @@ varassign	::= value
 
 /*---- DICTS & LISTS ----*/ // Provisionally complete
 
-dictassign	::= LDICT dictdef RDICT SEMI
+dictassign	::= LDICT dictdef RDICT
 	;
 
 dictdef		::= dictval dictvals
@@ -60,7 +60,7 @@ dictvals	::= COMMA dictval dictvals
 dictval 	::= value COLON value
 	;
 
-listassign	::= LBRACK listdef RBRACK SEMI
+listassign	::= LBRACK listdef RBRACK
 	;
 
 listdef		::= value listvals
@@ -98,12 +98,29 @@ type		::= CHAR //list of different types for function return
 value 		::= primitive_value
 			| STRING_LITERAL
 			| boolean_value
-			| dict_operated
+			| vals_from_aggs
 	;
 
-dict_operated	::= LEN LPAREN ID RPAREN
-				| ID LBRACK value RBRACK
+vals_from_aggs	::= LEN LPAREN ID RPAREN // len(d);
+				| ID LBRACK value RBRACK // d[k];
+				| vals_from_seq
 	;
+
+vals_from_seq	::= seq_literal COLON COLON seq_literal
+				| ID LBRACK splice RBACK
+	;
+
+splice			::= value COLON value
+				| value COLON
+				| COLON value
+	;
+
+dict_literal	::= dictassign
+				| ID
+
+seq_literal		::= listassign
+				| ID
+				| STRING_LITERAL
 
 primitive_value ::= CHARACTER_LITERAL
 			| INTEGER_LITERAL
@@ -112,6 +129,7 @@ primitive_value ::= CHARACTER_LITERAL
 
 paramlist	::= //parsing of parameters to a function
 	;
+
 /*------------------------------------*/
 
 /*---- CONTROL STATEMENTS ----*/
@@ -146,17 +164,15 @@ numeric_operator ::= PLUS
 				   | POW
 	;
 
-dict_operator ::= 
+dict_seq_bool_operator ::= value IN ID
 	;
 
-seq_operator ::=
-	;
-
-comp_bool_operator ::= EQEQ
+bool_operator ::= EQEQ
 				| NOTEQ
 				| AND
+	;
 
-comp_primitive_operator ::= LT
+prim_bool_operator ::= LT
 						| LTEQ
 						| EQEQ
 	;
@@ -165,8 +181,8 @@ comp_primitive_operator ::= LT
 
 expr ::= BOOLEAN_LITERAL
 		| NOT expr
-		| primitive_value comp_primitive_operator primitive_value
-		| boolean_value comp_bool_operator boolean_value
+		| primitive_value prim_bool_operator primitive_value
+		| boolean_value bool_operator boolean_value
 	;
 
 
