@@ -83,6 +83,7 @@ typefields	::= typefield typefields
 	;
 
 typefield	::= ID COLON type
+	;
 
 type		::= CHAR //list of different types for function return
 			| BOOLEAN
@@ -94,12 +95,14 @@ type		::= CHAR //list of different types for function return
 			| ID // to account for user-defined types
 	;
 
-value		::= CHARACTER_LITERAL
-			| BOOLEAN_LITERAL
+value 		::= primitive_value
+			| STRING_LITERAL
+			| boolean_value
+	;
+
+primitive_value ::= CHARACTER_LITERAL
 			| INTEGER_LITERAL
 			| FLOAT_LITERAL
-			| STRING_LITERAL
-			| expr
 	;
 
 paramlist	::= //parsing of parameters to a function
@@ -108,15 +111,17 @@ paramlist	::= //parsing of parameters to a function
 
 /*---- CONTROL STATEMENTS ----*/
 block := LBRACE body RBRACE
+	;
 
-expr := //TBC
 
-control_statement := if_statement
+control_statement ::= if_statement
 					| if_statement else_statement
 					| while_statement
 					| foreach_statement
+	;
 
-if_statement := IF LPAREN expr RPAREN block
+if_statement ::= IF LPAREN expr RPAREN block
+	;
 
 
 
@@ -124,5 +129,36 @@ if_statement := IF LPAREN expr RPAREN block
 
 
 /*---- OPERATORS ----*/
+boolean_value ::= BOOLEAN_LITERAL
+				| expr
+    ;
+
+
+numeric_operator ::= PLUS
+	;
+dict_operator ::=
+	;
+
+seq_operator ::=
+	;
+
+comp_bool_operator ::= EQEQ
+				| NOTEQ
+				| AND
+
+comp_primitive_operator ::= LT
+						| LTEQ
+						| EQEQ
+	;
+
+
+
+expr ::= BOOLEAN_LITERAL
+		| NOT expr
+		| primitive_value comp_primitive_operator primitive_value
+		| boolean_value comp_bool_operator boolean_value
+	;
+
+
 
 /*------------------------------------*/
