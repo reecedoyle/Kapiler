@@ -82,7 +82,7 @@ SingleCharacter		= [^\r\n\'\\]
 
 	/* OPERATORS */
 	"="				{ return symbol(sym.EQ);}
-	"!"				{ return symbol(sym.EXCLAMATION);}
+	"!"				{ return symbol(sym.NOT);}
 	"&&"			{ return symbol(sym.AND);}
 	"+"				{ return symbol(sym.PLUS);}
 	"-"				{ return symbol(sym.MINUS);}
@@ -95,6 +95,7 @@ SingleCharacter		= [^\r\n\'\\]
 	"=="			{ return symbol(sym.EQEQ);}
 	"!="			{ return symbol(sym.NOTEQ);}
 	":"				{ return symbol(sym.COLON);}
+	"len"			{ return symbol(sym.LEN);}
 
 	/* LITERALS */
 	/* Boolean Literals */
