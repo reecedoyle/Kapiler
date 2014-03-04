@@ -9,6 +9,9 @@ non terminal program, main, decllist, exprlist, funcdef, typedef, vardef;
 program		::= decllist main decllist	{: System.out.println("-------end of parsing-------"); :}
 	;
 
+main		::= VOID MAIN LBRACE exprlist RBRACE
+	;
+
 decllist	::= decllist decl
 			| 
 	;
@@ -16,9 +19,6 @@ decllist	::= decllist decl
 decl		::= funcdef
 			| vardef
 			| typedef
-	;
-
-main		::= VOID MAIN LBRACE exprlist RBRACE
 	;
 
 exprlist	::=
@@ -30,7 +30,7 @@ funcdef		::= DEF type ID LPAREN paramlist RPAREN LBRACE exprlist RBRACE
 vardef		::= type ID varinit SEMI
 	;
 
-varainit	::= EQ varassign
+varinit		::= EQ varassign
 			|
 	;
 
@@ -39,24 +39,40 @@ varassign	::= value
 			| listassign
 	;
 
-dictassign	::= LDICT dictvals RDICT SEMI
+/*---- DICTS & LISTS ----*/ // Provisionally complete
+
+dictassign	::= LDICT dictdef RDICT SEMI
 	;
 
-dictvals	::= dictval COMMA dictvals // need to change this to left-recursive?
+dictdef		::= dictval dictvals
+			|
+	;
+
+dictvals	::= COMMA dictval dictvals
 			|
 	;
 
 dictval 	::= value COLON value
 	;
 
-listassign	::=
+listassign	::= LBRACK listdef RBRACK SEMI
 	;
 
-typedef		::= TDEF ID COLON typefields SEMI
+listdef		::= value listvals
+			|
 	;
 
-typefields	::= typefields typefield
-			| typefield
+listvals	::= COMMA value listvals
+			|
+	;
+
+/*------------------------------------*/
+
+typedef		::= TDEF ID COLON typefield typefields SEMI
+	;
+
+typefields	::= typefield typefields
+			|
 	;
 
 typefield	::= ID COLON type
