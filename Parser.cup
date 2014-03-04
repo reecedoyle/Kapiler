@@ -117,10 +117,12 @@ splice			::= value COLON value
 
 dict_literal	::= dictassign
 				| ID
+	;
 
 seq_literal		::= listassign
 				| ID
 				| STRING_LITERAL
+	;
 
 primitive_value ::= CHARACTER_LITERAL
 			| INTEGER_LITERAL
