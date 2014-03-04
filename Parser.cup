@@ -36,6 +36,9 @@ varinit		::= EQ varassign
 			|
 	;
 
+varreassign	::= ID varinit
+	;
+
 varassign	::= value
 			| dictassign
 			| listassign
