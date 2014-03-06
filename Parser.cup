@@ -19,6 +19,7 @@ decllist	::= decl decllist
 decl		::= funcdef
 			| vardef
 			| typedef
+			|         // can also have nothing (in terms of delcarations) before main method.
 	;
 
 funcdef		::= DEF type ID LPAREN formal_param_list_opt RPAREN body
@@ -28,7 +29,7 @@ vardef		::= type ID varinit SEMI
 	;
 
 varinit		::= EQ varassign
-			|
+			|          
 	;
 
 varreassign	::= ID varinit
@@ -37,6 +38,7 @@ varreassign	::= ID varinit
 varassign	::= value
 			| dictassign
 			| listassign
+			| varreassign     // needed for things like " x=y=1;"
 	;
 
 /*---- DICTS & LISTS ----*/ // Provisionally complete
@@ -187,6 +189,8 @@ body	:= statement_list
 	;
 
 statement_list	::= statement statement_list
+						|
+						
 	;
 
 statement 	::= // list possible statements & things. basically general code.
@@ -194,6 +198,7 @@ statement 	::= // list possible statements & things. basically general code.
 
 control_statement ::= if_statement
 					| if_statement else_statement
+					| if_statement             // if statement doesn't always need else
 					| while_statement
 					| foreach_statement
 	;
