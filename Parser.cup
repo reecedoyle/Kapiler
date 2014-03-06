@@ -37,6 +37,7 @@ varreassign	::= ID varinit
 varassign	::= value
 			| dictassign
 			| listassign
+			| varreassign        // I have put this back in.
 	;
 
 /*---- DICTS & LISTS ----*/ // Provisionally complete
