@@ -31,7 +31,7 @@ Comment 			= {EndOfLineComment} | {MultiLineComment}
 EndOfLineComment	= "//".*
 MultiLineComment	= "/*"(.|[\r\n])*?"*/"
 
-Indentifier			= [:jletter:][:jletterdigit:]*
+Identifier			= [:jletter:][:jletterdigit:]*
 IntegerLiteral 		= 0 | [1-9][0-9]*
 FloatLiteral 		= [0-9]+ \. [0-9]*
 StringCharacter 	= [^\r\n\"\\]
