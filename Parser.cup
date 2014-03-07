@@ -109,10 +109,6 @@ value 		::= prim_not_bool_value
 			| function_call // return value from a function
 	;
 
-value_list	::= value COMMA value_list
-			|
-	;
-
 prim_not_bool_value	::= numeric_val
 					| char_val
 	;
@@ -180,11 +176,11 @@ formal_param_list	::= COMMA type ID formal_param_list
 					|
 	;
 
-actual_param_list_opt	::= ID actual_param_list
+actual_param_list_opt	::= value actual_param_list
 						|
 	;
 
-actual_param_list	::= COMMA ID actual_param_list
+actual_param_list	::= COMMA value actual_param_list
 					|
 	;
 
@@ -272,16 +268,11 @@ expr ::= BOOLEAN_LITERAL
 
 /*---- I/O ----*/
 
-print ::= PRINT value_list
+print ::= PRINT actual_param_list_opt SEMI
 	;
 
-read  ::= READ ID
+read  ::= READ ID SEMI
 	;
 
 
 /*------------------------------------*/
-
-
-
-
-
