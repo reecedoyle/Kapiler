@@ -1,8 +1,8 @@
-package Kapiler
+package Kapiler;
 
 import java_cup.runtime.*;
 
-terminal TDEF, DEF, VOID, IN, IF, ELSE, FOREACH, WHILE, DO, RETURN, READ, PRINT, CHAR, BOOLEAN, INT, FLOAT, STRING, LIST, DICT, MAIN, LPAREN, RPAREN, LBRACE, RBRACE, LBRACK, RBRACK, LDICT, RDICT, SEMI, COMMA, DOT, EQ, EXCLAMATION, AND, PLUS, MINUS, MULT, DIV, POW, CONCAT, LT, LTEQ, NOTEQ, COLON, BOOLEAN_LITERAL, INTEGER_LITERAL, FLOAT_LITERAL, ID, STRING_LITERAL, CHARACTER_LITERAL;
+terminal TDEF, DEF, VOID, IN, IF, ELSE, FOREACH, WHILE, DO, RETURN, READ, PRINT, CHAR, BOOLEAN, INT, FLOAT, STRING, LIST, DICT, MAIN, LPAREN, RPAREN, LBRACE, RBRACE, LBRACK, RBRACK, LDICT, RDICT, SEMI, COMMA, DOT, EQ, AND, PLUS, MINUS, MULT, DIV, POW, CONCAT, EQEQ, LT, LTEQ, NOTEQ, COLON, BOOLEAN_LITERAL, INTEGER_LITERAL, FLOAT_LITERAL, ID, STRING_LITERAL, CHARACTER_LITERAL, LEN, NOT;
 
 non terminal program, main, decllist, decl, funcdef, var_def_with_type, varinit, var_def, varassign, dictassign, dictdef, dictelems, dictelem, listassign, listdef, listelems, typedef, typefields, typefield, type, primitive_type, aggregate_type, value, value_list, prim_not_bool_value, char_val, numeric_val, boolean_val, aggregate_val, dict_val, seq_val, vals_from_aggs, numeric_vals_from_aggs, val_from_index, vals_from_seq, splice, formal_param_list_opt, formal_param_list, actual_param_list_opt, actual_param_list, block, body, statement_list, statement, function_call, control_statement, if_statement, else_statement, while_statement, foreach_statement, numeric_oper, dict_seq_bool_oper, bool_oper, prim_not_bool_comparison, expr, print, read;
 
@@ -113,9 +113,10 @@ prim_not_bool_value	::= numeric_val
 					| char_val
 	;
 
-char_val	::= CHAR_LITERAL
+char_val	::= CHARACTER_LITERAL
 			| val_from_index
 			| ID
+	;
 
 numeric_val	::= INTEGER_LITERAL // literals
 			| FLOAT_LITERAL
@@ -154,7 +155,7 @@ numeric_vals_from_aggs	::= LEN LPAREN ID RPAREN // len(d);
 val_from_index	::= ID LBRACK value RBRACK // a[i]; d[k];
 	;
 
-vals_from_seq	::= seq_literal CONCAT seq_literal // list :: list;
+vals_from_seq	::= seq_val CONCAT seq_val // list :: list;
 				| ID LBRACK splice RBRACK // list[i:j]; list[:j]; list[i:];
 	;
 
