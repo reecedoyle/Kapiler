@@ -17,27 +17,26 @@ decllist	::= decl decllist
 	;
 
 decl		::= funcdef
-			| vardef
+			| var_def_with_type
 			| typedef
 	;
 
 funcdef		::= DEF type ID LPAREN formal_param_list_opt RPAREN body
 	;
 
-vardef		::= type ID varinit SEMI
+var_def_with_type	::= type var_def // eg. int x = 6 ;
 	;
 
-varinit		::= EQ varassign
+varinit		::= EQ varassign // set the variable to a value or null
 			|
 	;
 
-varreassign	::= ID varinit
+var_def		::= ID varinit SEMI // eg. x = 5;
 	;
 
 varassign	::= value
 			| dictassign
 			| listassign
-			| varreassign        // I have put this back in.
 	;
 
 /*---- DICTS & LISTS ----*/ // Provisionally complete
@@ -101,6 +100,7 @@ aggregate_type	::= STRING
 value 		::= prim_not_bool_value
 			| boolean_val
 			| aggregate_val
+			| function_call // return value from a function
 	;
 
 prim_not_bool_value	::= numeric_val
@@ -192,7 +192,14 @@ body	:= statement_list
 statement_list	::= statement statement_list
 	;
 
-statement 	::= // list possible statements & things. basically general code.
+// list possible statements & things. basically general code.
+statement 	::= var_def_with_type
+			| var_def
+			| control_statement
+			| function_call
+	;
+
+function_call	::= ID LPAREN actual_param_list_opt RPAREN SEMI
 	;
 
 control_statement ::= if_statement
