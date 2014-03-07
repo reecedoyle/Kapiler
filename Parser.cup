@@ -177,6 +177,8 @@ actual_param_list	::= COMMA ID actual_param_list
 					|
 	;
 
+//EASTER EGG <@:^)
+
 /*------------------------------------*/
 
 /*---- CONTROL STATEMENTS ----*/
