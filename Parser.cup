@@ -188,10 +188,10 @@ actual_param_list	::= COMMA value actual_param_list
 /*------------------------------------*/
 
 /*---- CONTROL STATEMENTS ----*/
-block	:= LBRACE body RBRACE
+block	::= LBRACE body RBRACE
 	;
 
-body	:= statement_list
+body	::= statement_list
 		|
 	;
 
