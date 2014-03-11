@@ -1,4 +1,4 @@
-class QC{
+public class QC{
 
 	public static void main(String args[]) throws Exception {
          	/* init the automatically generated scanner from calc.lex */
