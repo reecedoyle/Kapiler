@@ -4,10 +4,9 @@ import java_cup.runtime.*;
 
 terminal TDEF, DEF, VOID, IN, IF, ELSE, FOREACH, WHILE, DO, RETURN, READ, PRINT, CHAR, BOOLEAN, INT, FLOAT, STRING, LIST, DICT, MAIN, LPAREN, RPAREN, LBRACE, RBRACE, LBRACK, RBRACK, LDICT, RDICT, SEMI, COMMA, DOT, EQ, AND, PLUS, MINUS, MULT, DIV, POW, CONCAT, EQEQ, LT, LTEQ, NOTEQ, COLON, BOOLEAN_LITERAL, INTEGER_LITERAL, FLOAT_LITERAL, ID, STRING_LITERAL, CHARACTER_LITERAL, LEN, NOT;
 
-non terminal program, main, decllist, decl, funcdef, var_def_with_type, varinit, var_def, varassign, dictassign, dictdef, dictelems, dictelem, listassign, listdef, listelems, typedef, typefields, typefield, type, primitive_type, aggregate_type, value, value_list, prim_not_bool_value, char_val, numeric_val, boolean_val, aggregate_val, dict_val, seq_val, vals_from_aggs, numeric_vals_from_aggs, val_from_index, vals_from_seq, splice, formal_param_list_opt, formal_param_list, actual_param_list_opt, actual_param_list, block, body, statement_list, statement, function_call, control_statement, if_statement, else_statement, while_statement, foreach_statement, numeric_oper, dict_seq_bool_oper, bool_oper, prim_not_bool_comparison, expr, print, read;
+non terminal program, main, decllist, decl, funcdef, var_def_with_type, varinit, var_def, varassign, dictassign, dictdef, dictelems, dictelem, listassign, listdef, listelems, typedef, typefields, typefield, type, primitive_type, aggregate_type, value, seq_val, vals_from_aggs, numeric_vals_from_aggs, val_from_index, vals_from_seq, splice, formal_param_list_opt, formal_param_list, actual_param_list_opt, actual_param_list, block, body, statement_list, statement, function_call, control_statement, if_statement, else_statement, while_statement, foreach_statement, expr, print, read, oper, function_body;
 
-precedence left NOT, AND;
-precedence left LTEQ, LT, EQEQ;
+precedence left EQEQ, LTEQ, NOTEQ, LT, AND, IN;
 precedence left PLUS, MINUS;
 precedence left MULT, DIV;
 precedence left POW;
@@ -27,25 +26,21 @@ decl		::= funcdef
 			| typedef
 	;
 
-funcdef		::= DEF type ID LPAREN formal_param_list_opt RPAREN body
+funcdef		::= DEF type ID LPAREN formal_param_list_opt RPAREN LBRACE function_body RBRACE
 	;
 
 var_def_with_type	::= type var_def // eg. int x = 6 ;
+	;
+
+var_def		::= ID varinit SEMI // eg. x = 5;
 	;
 
 varinit		::= EQ varassign // set the variable to a value or null
 			|
 	;
 
-var_def		::= ID varinit SEMI // eg. x = 5;
+varassign	::= expr
 	;
-
-varassign	::= value
-			| dictassign
-			| listassign
-	;
-
-
 
 /*---- DICTS & LISTS ----*/ // Provisionally complete
 
@@ -60,17 +55,17 @@ dictelems	::= COMMA dictelem dictelems
 			|
 	;
 
-dictelem 	::= value COLON value
+dictelem 	::= expr COLON expr
 	;
 
 listassign	::= LBRACK listdef RBRACK
 	;
 
-listdef		::= value listelems
+listdef		::= expr listelems
 			|
 	;
 
-listelems	::= COMMA value listelems
+listelems	::= COMMA expr listelems
 			|
 	;
 
@@ -109,7 +104,22 @@ aggregate_type	::= STRING
 
 
 /*---- VALUES ----*/
-value 		::= prim_not_bool_value
+value 		::= INTEGER_LITERAL
+			| FLOAT_LITERAL
+			| MINUS value
+			| CHARACTER_LITERAL
+			| BOOLEAN_LITERAL
+			| STRING_LITERAL
+			| dictassign
+			| listassign
+			| vals_from_aggs // idk what to do with this
+			| function_call
+			| ID
+			| ID DOT ID
+	;
+
+/*************************
+prim_not_bool_value
 			| boolean_val
 			| aggregate_val
 			| function_call // return value from a function
@@ -149,6 +159,7 @@ seq_val		::= listassign
 			| STRING_LITERAL
 			| ID
 	;
+*************************/
 
 vals_from_aggs	::= numeric_vals_from_aggs
 				| vals_from_seq
@@ -202,6 +213,9 @@ body	::= statement_list
 		|
 	;
 
+function_body	::= body RETURN value SEMI
+	;
+
 statement_list	::= statement statement_list
 	;
 
@@ -210,6 +224,8 @@ statement 	::= var_def_with_type
 			| var_def
 			| control_statement
 			| function_call
+			| read
+			| print
 	;
 
 function_call	::= ID LPAREN actual_param_list_opt RPAREN SEMI
@@ -241,14 +257,26 @@ foreach_statement	::= FOREACH LPAREN ID COLON ID RPAREN block
 
 /*---- OPERATORS ----*/
 
+oper 	::= PLUS
+		| MINUS
+		| MULT
+		| DIV
+		| POW
+		| IN
+		| EQEQ
+		| NOTEQ
+		| AND
+		| LT
+		| LTEQ
+	;
+
+/*************************
 numeric_oper ::= PLUS
 			| MINUS
 			| MULT
 			| DIV
 			| POW
 	;
-
-//---- Boolean-returning operators ----//
 
 dict_seq_bool_oper	::= value IN ID
 	;
@@ -264,12 +292,20 @@ prim_not_bool_comparison	::= LT
 							| NOTEQ
 	;
 
-expr ::= BOOLEAN_LITERAL
+*************************/
+
+expr 	::= value
+		| expr oper expr
+		| NOT expr
+	;
+
+/*************************
+expr	::= BOOLEAN_LITERAL
 		| NOT expr
 		| prim_not_bool_value prim_not_bool_comparison prim_not_bool_value
 		| boolean_val bool_oper boolean_val
 	;
-
+*************************/
 
 /*------------------------------------*/
 
