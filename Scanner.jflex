@@ -1,13 +1,11 @@
-package Kapiler;
 
 import java_cup.runtime.*;
 
 %%
 
 %cup
-%class Scanner
 %unicode
-%cup
+%class Scanner
 %line
 %column
 %{
@@ -139,7 +137,7 @@ SingleCharacter		= [^\r\n\'\\]
 	"\\\\"				{ string.append('\\');}
 	
 	/* Error Catch */
-	\\.					{ System.err.printlin("Error in line "+yyline+": Illegal escape character \""+yytext()+"\"");}
+	\\.					{ System.err.println("Error in line "+yyline+": Illegal escape character \""+yytext()+"\"");}
 	
 }
 
