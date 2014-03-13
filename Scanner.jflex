@@ -1,11 +1,11 @@
-package hello;
+
 import java_cup.runtime.*;
 
 %%
 
 %cup
 %unicode
-%class HelloLex
+%class Scanner
 %line
 %column
 %{
@@ -23,9 +23,9 @@ import java_cup.runtime.*;
 %eofval}
 
 /* MACROS */
-LineTerminator 		= \r\n?|\n
-WhiteSpace 			= \s*
-Comment 			= {EndOfLineComment} | {MultiLineComment}
+LineTerminator 		= \r|\n|\r\n
+WhiteSpace 		= {LineTerminator} | [ \t\f]
+Comment 		= {EndOfLineComment} | {MultiLineComment}
 EndOfLineComment	= "//".*
 MultiLineComment	= "/*"(.|[\r\n])*?"*/"
 
@@ -45,7 +45,7 @@ SingleCharacter		= [^\r\n\'\\]
 	/* Assignments and Expressions */
 	"tdef"			{ return symbol(sym.TDEF);}
 	"def"			{ return symbol(sym.DEF);}
-	"void"			{ System.out.print("VOID "); return symbol(sym.VOID);}
+	"void"			{ return symbol(sym.VOID);}
 	"in"			{ return symbol(sym.IN);}
 	"if"			{ return symbol(sym.IF);}
 	"else"			{ return symbol(sym.ELSE);}
@@ -55,11 +55,11 @@ SingleCharacter		= [^\r\n\'\\]
 	"return"		{ return symbol(sym.RETURN);}
 	"read"			{ return symbol(sym.READ);}
 	"print"			{ return symbol(sym.PRINT);}
-	"main"			{ System.out.print("MAIN "); return symbol(sym.MAIN);}
+	"main"			{ return symbol(sym.MAIN);}
 	/* Types */
 	"char"			{ return symbol(sym.CHAR);}
 	"bool"			{ return symbol(sym.BOOLEAN);}
-	"int"			{ System.out.print("INT "); return symbol(sym.INT);}
+	"int"			{ return symbol(sym.INT);}
 	"float"			{ return symbol(sym.FLOAT);}
 	"string"		{ return symbol(sym.STRING);}
 	"list"			{ return symbol(sym.LIST);}
@@ -68,18 +68,18 @@ SingleCharacter		= [^\r\n\'\\]
 	/* SEPARATORS */
 	"("				{ return symbol(sym.LPAREN);}
 	")"				{ return symbol(sym.RPAREN);}
-	"{"				{ System.out.print("LBRACE "); return symbol(sym.LBRACE);}
-	"}"				{ System.out.print("RBRACE "); return symbol(sym.RBRACE);}
+	"{"				{ return symbol(sym.LBRACE);}
+	"}"				{ return symbol(sym.RBRACE);}
 	"["				{ return symbol(sym.LBRACK);}
 	"]"				{ return symbol(sym.RBRACK);}
 	"[|"			{ return symbol(sym.LDICT);}
 	"|]"			{ return symbol(sym.RDICT);}
-	";"				{ System.out.print("SEMI "); return symbol(sym.SEMI);}
+	";"				{ return symbol(sym.SEMI);}
 	","				{ return symbol(sym.COMMA);}
 	"."				{ return symbol(sym.DOT);}
 
 	/* OPERATORS */
-	"="				{ System.out.print("EQ "); return symbol(sym.EQ);}
+	"="				{ return symbol(sym.EQ);}
 	"!"				{ return symbol(sym.NOT);}
 	"&&"			{ return symbol(sym.AND);}
 	"+"				{ return symbol(sym.PLUS);}
@@ -101,7 +101,7 @@ SingleCharacter		= [^\r\n\'\\]
 	"false"				{ return symbol(sym.BOOLEAN_LITERAL, false);}
 
 	/* Numeric Literals */
-	{IntegerLiteral}	{ System.out.print("VALUE "); return symbol(sym.INTEGER_LITERAL, new Integer(yytext()));}
+	{IntegerLiteral}	{ return symbol(sym.INTEGER_LITERAL, new Integer(yytext()));}
 	{FloatLiteral}		{ return symbol(sym.FLOAT_LITERAL, new Float(yytext()));}
 
 	/* Character Literal */
@@ -118,9 +118,7 @@ SingleCharacter		= [^\r\n\'\\]
 	{WhiteSpace}		{ /* ignore */ }
 
 	/* Comments */
-	{Identifier}		{ System.out.print("ID "); return symbol(sym.ID, yytext());}
-	
-	{LineTerminator} { /* ignore */}
+	{Identifier}		{ return symbol(sym.ID, yytext());}
 }
 
 <STRING_STATE> {
