@@ -1,11 +1,11 @@
-
+package hello;
 import java_cup.runtime.*;
 
 %%
 
 %cup
 %unicode
-%class Scanner
+%class HelloLex
 %line
 %column
 %{
@@ -24,8 +24,8 @@ import java_cup.runtime.*;
 
 /* MACROS */
 LineTerminator 		= \r|\n|\r\n
-WhiteSpace 		= {LineTerminator} | [ \t\f]
-Comment 		= {EndOfLineComment} | {MultiLineComment}
+WhiteSpace 			= {LineTerminator} | [ \t\f]
+Comment 			= {EndOfLineComment} | {MultiLineComment}
 EndOfLineComment	= "//".*
 MultiLineComment	= "/*"(.|[\r\n])*?"*/"
 
@@ -108,7 +108,7 @@ SingleCharacter		= [^\r\n\'\\]
 	\'					{ yybegin(CHAR_STATE);}
 
 	/* String Literal */
-	\"					{ yybegin(STRING_STATE); string.setLength(0);}
+	\"					{ yybegin(STRING_STATE);}
 
 	/* OTHERS */
 	/* Comments */
@@ -119,6 +119,8 @@ SingleCharacter		= [^\r\n\'\\]
 
 	/* Comments */
 	{Identifier}		{ return symbol(sym.ID, yytext());}
+	
+	
 }
 
 <STRING_STATE> {
