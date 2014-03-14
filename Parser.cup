@@ -1,278 +1,279 @@
 
-import java_cup.runtime.*;
+	import java_cup.runtime.*;
 
-parser code {:
+	parser code {:
 
-	public String rule;
-	
-	public void report_error(String message, Object info){
+		public String rule;
+		
+		public void report_error(String message, Object info){
 
-		StringBuffer m = new StringBuffer("Error");
-		if (info instanceof java_cup.runtime.Symbol) {
-			java_cup.runtime.Symbol s = ((java_cup.runtime.Symbol) info);
-			if (s.left >= 0){
-				m.append(" in line "+(s.left+1));
+			StringBuffer m = new StringBuffer("Error");
+			if (info instanceof java_cup.runtime.Symbol) {
+				java_cup.runtime.Symbol s = ((java_cup.runtime.Symbol) info);
+				if (s.left >= 0){
+					m.append(" in line "+(s.left+1));
+				}
 			}
+			m.append(": rule \""+rule+"\" violated");
+			System.err.println(m);
 		}
-		m.append(": rule \""+rule+"\" violated");
-		System.err.println(m);
-	}
-	public void report_fatal_error(String message, Object info) {
-		report_error(message, info);
-	}
-:};
+		public void report_fatal_error(String message, Object info) {
+			report_error(message, info);
+		}
+	:};
 
-terminal TDEF, DEF, VOID, IN, IF, ELSE, FOREACH, WHILE, DO, RETURN, READ, PRINT, CHAR, BOOLEAN, INT, FLOAT, STRING, LIST, DICT, MAIN, LPAREN, RPAREN, LBRACE, RBRACE, LBRACK, RBRACK, LDICT, RDICT, SEMI, COMMA, DOT, EQ, AND, PLUS, MINUS, MULT, DIV, POW, CONCAT, EQEQ, LT, LTEQ, NOTEQ, COLON, BOOLEAN_LITERAL, INTEGER_LITERAL, FLOAT_LITERAL, ID, STRING_LITERAL, CHARACTER_LITERAL, LEN, NOT;
+	terminal TDEF, DEF, VOID, IN, IF, ELSE, FOREACH, WHILE, DO, RETURN, READ, PRINT, CHAR, BOOLEAN, INT, FLOAT, STRING, LIST, DICT, MAIN, LPAREN, RPAREN, LBRACE, RBRACE, LBRACK, RBRACK, LDICT, RDICT, SEMI, COMMA, DOT, EQ, AND, PLUS, MINUS, MULT, DIV, POW, CONCAT, EQEQ, LT, LTEQ, NOTEQ, COLON, BOOLEAN_LITERAL, INTEGER_LITERAL, FLOAT_LITERAL, ID, STRING_LITERAL, CHARACTER_LITERAL, LEN, NOT;
 
-non terminal program, main, decllist, decl, funcdef, void_funcdef, var_def_with_type, varinit, var_def, varassign, dictassign, dictdef, dictelems, dictelem, listassign, listdef, listelems, typedef, typefields, typefield, type, primitive_type, aggregate_type, value, vals_from_aggs, numeric_vals_from_aggs, val_from_index, vals_from_seq, splice, formal_param_list_opt, formal_param_list, actual_param_list_opt, actual_param_list, block, body, statement_list, statement, function_call, control_statement, if_statement, else_statement, while_statement, foreach_statement, expr, print, read, oper, function_body, void_function_body, return_value;
+	non terminal program, main, decllist, decl, funcdef, void_funcdef, var_def_with_type, varinit, var_def, varassign, dictassign, dictdef, dictelems, dictelem, listassign, listdef, listelems, typedef, typefields, typefield, type, primitive_type, aggregate_type, value, vals_from_aggs, numeric_vals_from_aggs, val_from_index, vals_from_seq, splice, formal_param_list_opt, formal_param_list, actual_param_list_opt, actual_param_list, block, body, statement_list, statement, function_call, control_statement, if_statement, else_statement, while_statement, foreach_statement, expr, print, read, oper, function_body, void_function_body, return_value;
 
-precedence left EQEQ, LTEQ, NOTEQ, LT, AND, IN, CONCAT;
-precedence left PLUS, MINUS;
-precedence left MULT, DIV;
-precedence left POW;
+	precedence left EQEQ, LTEQ, NOTEQ, LT, AND, IN, CONCAT;
+	precedence left PLUS, MINUS;
+	precedence left MULT, DIV;
+	precedence left POW;
 
-program		::= decllist main decllist	{: System.out.println("-------end of parsing-------"); :}
-	;
+	program		::= decllist main decllist	{: System.out.println("-------end of parsing-------"); :}
+		;
 
-main		::= VOID MAIN LBRACE void_function_body RBRACE
-	;
+	main		::= VOID MAIN block
+		;
 
-decllist	::= decl decllist
-			| 
-	;
+	decllist	::= decl decllist
+				| 
+		;
 
-decl		::= funcdef
-			| void_funcdef
-			| var_def_with_type
-			| typedef
-	;
+	decl		::= funcdef
+				| void_funcdef
+				| var_def_with_type
+				| typedef
+		;
 
-funcdef		::= DEF type ID LPAREN formal_param_list_opt RPAREN LBRACE function_body RBRACE
-	;
+	funcdef		::= DEF type ID LPAREN formal_param_list_opt RPAREN LBRACE function_body RBRACE
+		;
 
-void_funcdef ::= DEF VOID ID LPAREN formal_param_list_opt RPAREN LBRACE void_function_body RBRACE
+	void_funcdef ::= DEF VOID ID LPAREN formal_param_list_opt RPAREN LBRACE void_function_body RBRACE
+		;	
+
+	var_def_with_type	::= type var_def // eg. int x = 6 ;
+		;
+
+	var_def		::= ID varinit SEMI // eg. x = 5;
+		;
+
+	varinit		::= EQ varassign // set the variable to a value or null
+				|
+		;
+
+	varassign	::= expr
+		;
+
+	/*---- DICTS & LISTS ----*/ // Provisionally complete
+
+	dictassign	::= LDICT dictdef RDICT
+		;
+
+	dictdef		::= dictelem dictelems
+				|
+		;
+
+	dictelems	::= COMMA dictelem dictelems
+				|
+		;
+
+	dictelem 	::= expr COLON expr
+		;
+
+	listassign	::= LBRACK listdef RBRACK
+		;
+
+	listdef		::= expr listelems
+				|
+		;
+
+	listelems	::= COMMA expr listelems
+				|
+		;
+
+	/*------------------------------------*/
+
+	/*---- TYPES ----*/
+
+	typedef		::= TDEF ID COLON typefield typefields SEMI
+		;
+
+	typefields	::= COMMA typefield typefields
+				|
+		;
+
+	typefield	::= ID COLON type
+		;
+
+	type		::= primitive_type //list of different types for function return
+				| aggregate_type
+		;
+
+	primitive_type	::=	CHAR
+					| BOOLEAN
+					| INT
+					| FLOAT
+		;
+
+	aggregate_type	::= STRING
+					| LIST
+					| DICT
+					| ID // to account for user-defined types
+		;
+
+
+
+	/*---- VALUES ----*/
+	value 		::= INTEGER_LITERAL
+				| FLOAT_LITERAL
+				| MINUS value
+				| CHARACTER_LITERAL
+				| BOOLEAN_LITERAL
+				| STRING_LITERAL
+				| dictassign
+				| listassign
+				| vals_from_aggs // idk what to do with this
+				| function_call
+				| ID
+				| ID DOT ID
+		;
+
+	vals_from_aggs	::= numeric_vals_from_aggs
+					| vals_from_seq
+		;
+
+	numeric_vals_from_aggs	::= LEN LPAREN ID RPAREN // len(d);
+							| val_from_index
+		;
+
+	val_from_index	::= ID LBRACK value RBRACK // a[i]; d[k];
+		;
+
+	vals_from_seq	::= value CONCAT value // list :: list;
+					| ID LBRACK splice RBRACK // list[i:j]; list[:j]; list[i:];
+		;
+
+	splice			::= value COLON value
+					| value COLON
+					| COLON value
+		;
+
+	/*------------------------------------*/
+
+
+	/*---- PARAMETERS ----*/
+
+	formal_param_list_opt	::= type ID formal_param_list
+							|
+		;
+
+	formal_param_list	::= COMMA type ID formal_param_list
+						|
+		;
+
+	actual_param_list_opt	::= value actual_param_list
+							|
+		;
+
+	actual_param_list	::= COMMA value actual_param_list
+						|
+		;
+
+
+	/*------------------------------------*/
+
+	/*---- CONTROL STATEMENTS ----*/
+	block	::= LBRACE body RBRACE
+		;
+
+	body	::= statement_list
+		;
+
+	function_body	::= body RETURN return_value SEMI
+		;
+
+	void_function_body ::= body RETURN VOID SEMI
+						|  body
+						|  body RETURN SEMI
+		;
+
+
+	return_value	::= expr
+					|
 	;	
 
-var_def_with_type	::= type var_def // eg. int x = 6 ;
-	;
+	statement_list	::= statement statement_list
+					 |
+		;
 
-var_def		::= ID varinit SEMI // eg. x = 5;
-	;
+	statement 	::= var_def_with_type
+				| var_def
+				| typedef
+				| control_statement
+				| function_call
+				| read
+				| print
+				
+		;
 
-varinit		::= EQ varassign // set the variable to a value or null
-			|
-	;
+	function_call	::= ID LPAREN actual_param_list_opt RPAREN SEMI
+		;
 
-varassign	::= expr
-	;
+	control_statement ::= if_statement
+						| if_statement else_statement
+						| while_statement
+						| foreach_statement
+		;
 
-/*---- DICTS & LISTS ----*/ // Provisionally complete
+	if_statement 	::= IF LPAREN expr RPAREN block
+		;
 
-dictassign	::= LDICT dictdef RDICT
-	;
+	else_statement 	::= ELSE block
+		;
 
-dictdef		::= dictelem dictelems
-			|
-	;
+	while_statement	::= WHILE LPAREN expr RPAREN DO block
+		;
 
-dictelems	::= COMMA dictelem dictelems
-			|
-	;
+	foreach_statement	::= FOREACH LPAREN ID COLON ID RPAREN block
+		;
 
-dictelem 	::= expr COLON expr
-	;
 
-listassign	::= LBRACK listdef RBRACK
-	;
 
-listdef		::= expr listelems
-			|
-	;
+	/*------------------------------------*/
 
-listelems	::= COMMA expr listelems
-			|
-	;
 
-/*------------------------------------*/
 
-/*---- TYPES ----*/
+	/*---- OPERATORS ----*/
 
-typedef		::= TDEF ID COLON typefield typefields SEMI
-	;
+	oper 	::= PLUS
+			| MINUS
+			| MULT
+			| DIV
+			| POW
+			| IN
+			| EQEQ
+			| NOTEQ
+			| AND
+			| LT
+			| LTEQ
+		;
 
-typefields	::= COMMA typefield typefields
-			|
-	;
+	expr 	::= value
+			| expr oper expr
+			| NOT expr
+		;
 
-typefield	::= ID COLON type
-	;
+	/*------------------------------------*/
 
-type		::= primitive_type //list of different types for function return
-			| aggregate_type
-	;
+	/*---- I/O ----*/
 
-primitive_type	::=	CHAR
-				| BOOLEAN
-				| INT
-				| FLOAT
-	;
+	print ::= PRINT actual_param_list_opt SEMI
+		;
 
-aggregate_type	::= STRING
-				| LIST
-				| DICT
-				| ID // to account for user-defined types
-	;
+	read  ::= READ ID SEMI
+		;
 
 
-
-/*---- VALUES ----*/
-value 		::= INTEGER_LITERAL
-			| FLOAT_LITERAL
-			| MINUS value
-			| CHARACTER_LITERAL
-			| BOOLEAN_LITERAL
-			| STRING_LITERAL
-			| dictassign
-			| listassign
-			| vals_from_aggs // idk what to do with this
-			| function_call
-			| ID
-			| ID DOT ID
-	;
-
-vals_from_aggs	::= numeric_vals_from_aggs
-				| vals_from_seq
-	;
-
-numeric_vals_from_aggs	::= LEN LPAREN ID RPAREN // len(d);
-						| val_from_index
-	;
-
-val_from_index	::= ID LBRACK value RBRACK // a[i]; d[k];
-	;
-
-vals_from_seq	::= value CONCAT value // list :: list;
-				| ID LBRACK splice RBRACK // list[i:j]; list[:j]; list[i:];
-	;
-
-splice			::= value COLON value
-				| value COLON
-				| COLON value
-	;
-
-/*------------------------------------*/
-
-
-/*---- PARAMETERS ----*/
-
-formal_param_list_opt	::= type ID formal_param_list
-						|
-	;
-
-formal_param_list	::= COMMA type ID formal_param_list
-					|
-	;
-
-actual_param_list_opt	::= value actual_param_list
-						|
-	;
-
-actual_param_list	::= COMMA value actual_param_list
-					|
-	;
-
-
-/*------------------------------------*/
-
-/*---- CONTROL STATEMENTS ----*/
-block	::= LBRACE body RBRACE
-	;
-
-body	::= statement_list
-	;
-
-function_body	::= body RETURN return_value SEMI
-	;
-
-void_function_body ::= body
-					|  body RETURN SEMI
-	;
-
-
-return_value	::= value
-				|
-	;
-
-statement_list	::= statement statement_list
-				 |
-	;
-
-statement 	::= var_def_with_type
-			| var_def
-			| typedef
-			| control_statement
-			| function_call SEMI
-			| read
-			| print
-			
-	;
-
-function_call	::= ID LPAREN actual_param_list_opt RPAREN
-	;
-
-control_statement ::= if_statement
-					| if_statement else_statement
-					| while_statement
-					| foreach_statement
-	;
-
-if_statement 	::= IF LPAREN expr RPAREN block
-	;
-
-else_statement 	::= ELSE block
-	;
-
-while_statement	::= WHILE LPAREN expr RPAREN DO block
-	;
-
-foreach_statement	::= FOREACH LPAREN ID COLON ID RPAREN block
-	;
-
-
-
-/*------------------------------------*/
-
-
-
-/*---- OPERATORS ----*/
-
-oper 	::= PLUS
-		| MINUS
-		| MULT
-		| DIV
-		| POW
-		| IN
-		| EQEQ
-		| NOTEQ
-		| AND
-		| LT
-		| LTEQ
-	;
-
-expr 	::= value
-		| expr oper expr
-		| NOT expr
-	;
-
-/*------------------------------------*/
-
-/*---- I/O ----*/
-
-print ::= PRINT actual_param_list_opt SEMI
-	;
-
-read  ::= READ ID SEMI
-	;
-
-
-/*------------------------------------*/
+	/*------------------------------------*/
