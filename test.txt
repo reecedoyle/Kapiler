@@ -9,6 +9,7 @@ void main
 		//list series = [1,2,3] :: otherList;
 	}
 	x = foo();
+	Person kapil = "name", "age", "hey";
 	/* THIS IS A BIG-ASS COMMENT
 
 

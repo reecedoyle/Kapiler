@@ -63,8 +63,7 @@ varinit		::= EQ varassign // set the variable to a value or null
 			|
 	;
 
-varassign	::= expr
-			| listdef
+varassign	::= listdef
 	;
 
 /*---- DICTS & LISTS ----*/ // Provisionally complete
