@@ -34,7 +34,7 @@ precedence left POW;
 program		::= decllist main decllist	{: System.out.println("-------end of parsing-------"); :}
 	;
 
-main		::= VOID MAIN block
+main		::= VOID MAIN LBRACE void_function_body RBRACE
 	;
 
 decllist	::= decl decllist
