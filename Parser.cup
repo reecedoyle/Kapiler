@@ -195,7 +195,7 @@ function_body	::= body RETURN return_value SEMI
 	;
 
 void_function_body ::= body RETURN VOID SEMI
-					|  body SEMI
+					|  body
 					|  body RETURN SEMI
 	;
 
