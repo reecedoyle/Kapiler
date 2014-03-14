@@ -1,11 +1,10 @@
-package hello;
 import java_cup.runtime.*;
 
 %%
 
 %cup
 %unicode
-%class HelloLex
+%class Scanner
 %line
 %column
 %{

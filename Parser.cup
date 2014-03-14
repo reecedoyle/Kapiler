@@ -1,4 +1,3 @@
-package hello;
 import java_cup.runtime.*;
 
 parser code {:
@@ -32,7 +31,7 @@ precedence left PLUS, MINUS;
 precedence left MULT, DIV;
 precedence left POW;
 
-program		::= {: rule = "program"; :} decllist main decllist	{: System.out.println("-------end of parsing-------"); :}
+program		::= decllist main decllist	{: System.out.println("-------end of parsing-------"); :}
 	;
 
 main		::= VOID MAIN block
