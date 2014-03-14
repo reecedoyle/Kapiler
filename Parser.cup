@@ -202,7 +202,7 @@ void_function_body ::= body RETURN VOID SEMI
 
 return_value	::= value
 				|
-;
+	;
 
 statement_list	::= statement statement_list
 				 |
