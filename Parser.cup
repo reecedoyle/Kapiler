@@ -194,7 +194,7 @@ body	::= statement_list
 function_body	::= body RETURN return_value SEMI
 	;
 
-void_function_body ::= body 
+void_function_body ::= body
 					|  body RETURN SEMI
 	;
 
@@ -211,13 +211,13 @@ statement 	::= var_def_with_type
 			| var_def
 			| typedef
 			| control_statement
-			| function_call
+			| function_call SEMI
 			| read
 			| print
 			
 	;
 
-function_call	::= ID LPAREN actual_param_list_opt RPAREN SEMI
+function_call	::= ID LPAREN actual_param_list_opt RPAREN
 	;
 
 control_statement ::= if_statement
