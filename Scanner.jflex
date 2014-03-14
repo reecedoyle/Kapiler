@@ -1,11 +1,10 @@
-package hello;
 import java_cup.runtime.*;
 
 %%
 
 %cup
 %unicode
-%class HelloLex
+%class Lexer
 %line
 %column
 %{
@@ -14,7 +13,7 @@ import java_cup.runtime.*;
   private Symbol symbol(int tokenID) {
     return new Symbol(tokenID, yyline, yycolumn);
   }
-  private Symbol symbol(int tokenID, Object value) {
+  private S ymbol symbol(int tokenID, Object value) {
     return new Symbol(tokenID, yyline, yycolumn, value);
   }
 %}
