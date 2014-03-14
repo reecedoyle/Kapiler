@@ -24,7 +24,7 @@
 
 	terminal TDEF, DEF, VOID, IN, IF, ELSE, FOREACH, WHILE, DO, RETURN, READ, PRINT, CHAR, BOOLEAN, INT, FLOAT, STRING, LIST, DICT, MAIN, LPAREN, RPAREN, LBRACE, RBRACE, LBRACK, RBRACK, LDICT, RDICT, SEMI, COMMA, DOT, EQ, AND, PLUS, MINUS, MULT, DIV, POW, CONCAT, EQEQ, LT, LTEQ, NOTEQ, COLON, BOOLEAN_LITERAL, INTEGER_LITERAL, FLOAT_LITERAL, ID, STRING_LITERAL, CHARACTER_LITERAL, LEN, NOT;
 
-	non terminal program, main, decllist, decl, funcdef, void_funcdef, var_def_with_type, varinit, var_def, varassign, dictassign, dictdef, dictelems, dictelem, listassign, listdef, listelems, typedef, typefields, typefield, type, primitive_type, aggregate_type, value, vals_from_aggs, numeric_vals_from_aggs, val_from_index, vals_from_seq, splice, formal_param_list_opt, formal_param_list, actual_param_list_opt, actual_param_list, block, body, statement_list, statement, function_call, control_statement, if_statement, else_statement, while_statement, foreach_statement, expr, print, read, oper, function_body, void_function_body, return_value;
+	non terminal program, main, decllist, decl, funcdef, void_funcdef, var_def_with_type, varinit, var_def, varassign, dictassign, dictdef, dictelems, dictelem, listassign, listdef, listelems, typedef, typefields, typefield, type, primitive_type, aggregate_type, value, vals_from_aggs, numeric_vals_from_aggs, val_from_index, vals_from_seq, splice, formal_param_list_opt, formal_param_list, actual_param_list_opt, actual_param_list, block, body, statement_list, statement, function_call, control_statement, if_statement, else_statement, while_statement, foreach_statement, expr, print, read, oper, function_body, void_function_body, return_value, ids;
 
 	precedence left EQEQ, LTEQ, NOTEQ, LT, AND, IN, CONCAT;
 	precedence left PLUS, MINUS;
@@ -56,7 +56,7 @@
 	var_def_with_type	::= type var_def // eg. int x = 6 ;
 		;
 
-	var_def		::= ID varinit SEMI // eg. x = 5;
+	var_def		::= ids varinit SEMI // eg. x = 5;
 		;
 
 	varinit		::= EQ varassign // set the variable to a value or null
@@ -137,8 +137,11 @@ varassign	::= listdef
 				| listassign
 				| vals_from_aggs // idk what to do with this
 				| function_call
-				| ID
-				| ID DOT ID
+				| ids
+		;
+
+	ids			::= ID
+				| ID DOT ids
 		;
 
 	vals_from_aggs	::= numeric_vals_from_aggs
