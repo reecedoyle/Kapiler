@@ -1,6 +1,28 @@
 package hello;
 import java_cup.runtime.*;
 
+parser code {:
+
+	public String rule;
+	
+	public void report_error(String message, Object info){
+
+		StringBuffer m = new StringBuffer("Error");
+		if (info instanceof java_cup.runtime.Symbol) {
+			java_cup.runtime.Symbol s = ((java_cup.runtime.Symbol) info);
+			if (s.left >= 0){
+				m.append(" in line "+(s.left+1));
+			}
+		}
+		m.append(": rule \""+rule+"\" violated");
+		System.err.println(m);
+	}
+	public void report_fatal_error(String message, Object info) {
+		report_error(message, info);
+		System.exit(1);
+	}
+:};
+
 terminal TDEF, DEF, VOID, IN, IF, ELSE, FOREACH, WHILE, DO, RETURN, READ, PRINT, CHAR, BOOLEAN, INT, FLOAT, STRING, LIST, DICT, MAIN, LPAREN, RPAREN, LBRACE, RBRACE, LBRACK, RBRACK, LDICT, RDICT, SEMI, COMMA, DOT, EQ, AND, PLUS, MINUS, MULT, DIV, POW, CONCAT, EQEQ, LT, LTEQ, NOTEQ, COLON, BOOLEAN_LITERAL, INTEGER_LITERAL, FLOAT_LITERAL, ID, STRING_LITERAL, CHARACTER_LITERAL, LEN, NOT;
 
 non terminal program, main, decllist, decl, funcdef, var_def_with_type, varinit, var_def, varassign, dictassign, dictdef, dictelems, dictelem, listassign, listdef, listelems, typedef, typefields, typefield, type, primitive_type, aggregate_type, value, seq_val, vals_from_aggs, numeric_vals_from_aggs, val_from_index, vals_from_seq, splice, formal_param_list_opt, formal_param_list, actual_param_list_opt, actual_param_list, block, body, statement_list, statement, function_call, control_statement, if_statement, else_statement, while_statement, foreach_statement, expr, print, read, oper, function_body;
@@ -10,7 +32,7 @@ precedence left PLUS, MINUS;
 precedence left MULT, DIV;
 precedence left POW;
 
-program		::= decllist main decllist	{: System.out.println("-------end of parsing-------"); :}
+program		::= {: rule = "program"; :} decllist main decllist	{: System.out.println("-------end of parsing-------"); :}
 	;
 
 main		::= VOID MAIN block
