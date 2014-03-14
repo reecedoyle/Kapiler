@@ -194,8 +194,7 @@ body	::= statement_list
 function_body	::= body RETURN return_value SEMI
 	;
 
-void_function_body ::= body RETURN VOID SEMI
-					|  body SEMI
+void_function_body ::= body
 					|  body RETURN SEMI
 	;
 
