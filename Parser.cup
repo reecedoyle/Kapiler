@@ -191,6 +191,7 @@ function_body	::= body RETURN return_value SEMI
 
 return_value	::= value
 				|
+;
 
 statement_list	::= statement statement_list
 				 |
