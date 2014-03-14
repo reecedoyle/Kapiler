@@ -1,0 +1,12 @@
+
+
+
+void main
+{
+	
+	while(true) do{
+		string sd = "rekt";
+	}
+	
+	int SUPERHOT = 5;
+}

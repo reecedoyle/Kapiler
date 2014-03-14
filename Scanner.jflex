@@ -161,4 +161,4 @@ SingleCharacter		= [^\r\n\'\\]
 	
 }
 
-.	{ System.err.println("Error in line "+yyline+": Illegal character: "+yytext());}
+.	{ System.err.println("Error in line "+yyline+1+": Illegal character \""+yytext()+"\"");}
