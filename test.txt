@@ -1,0 +1,21 @@
+
+tdef reece : name:string, age:int;
+
+void main
+{
+	
+	while(true) do{
+		string sd = "rekt";
+		//list series = [1,2,3] :: otherList;
+	}
+	char c = 'a';
+	/* THIS IS A BIG-ASS COMMENT
+
+
+
+	YO
+
+	*/
+	
+	int SUPERHOT = 5;
+}

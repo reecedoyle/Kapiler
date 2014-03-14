@@ -18,15 +18,14 @@ parser code {:
 	}
 	public void report_fatal_error(String message, Object info) {
 		report_error(message, info);
-		System.exit(1);
 	}
 :};
 
 terminal TDEF, DEF, VOID, IN, IF, ELSE, FOREACH, WHILE, DO, RETURN, READ, PRINT, CHAR, BOOLEAN, INT, FLOAT, STRING, LIST, DICT, MAIN, LPAREN, RPAREN, LBRACE, RBRACE, LBRACK, RBRACK, LDICT, RDICT, SEMI, COMMA, DOT, EQ, AND, PLUS, MINUS, MULT, DIV, POW, CONCAT, EQEQ, LT, LTEQ, NOTEQ, COLON, BOOLEAN_LITERAL, INTEGER_LITERAL, FLOAT_LITERAL, ID, STRING_LITERAL, CHARACTER_LITERAL, LEN, NOT;
 
-non terminal program, main, decllist, decl, funcdef, var_def_with_type, varinit, var_def, varassign, dictassign, dictdef, dictelems, dictelem, listassign, listdef, listelems, typedef, typefields, typefield, type, primitive_type, aggregate_type, value, seq_val, vals_from_aggs, numeric_vals_from_aggs, val_from_index, vals_from_seq, splice, formal_param_list_opt, formal_param_list, actual_param_list_opt, actual_param_list, block, body, statement_list, statement, function_call, control_statement, if_statement, else_statement, while_statement, foreach_statement, expr, print, read, oper, function_body;
+non terminal program, main, decllist, decl, funcdef, var_def_with_type, varinit, var_def, varassign, dictassign, dictdef, dictelems, dictelem, listassign, listdef, listelems, typedef, typefields, typefield, type, primitive_type, aggregate_type, value, vals_from_aggs, numeric_vals_from_aggs, val_from_index, vals_from_seq, splice, formal_param_list_opt, formal_param_list, actual_param_list_opt, actual_param_list, block, body, statement_list, statement, function_call, control_statement, if_statement, else_statement, while_statement, foreach_statement, expr, print, read, oper, function_body, return_value;
 
-precedence left EQEQ, LTEQ, NOTEQ, LT, AND, IN;
+precedence left EQEQ, LTEQ, NOTEQ, LT, AND, IN, CONCAT;
 precedence left PLUS, MINUS;
 precedence left MULT, DIV;
 precedence left POW;
@@ -91,14 +90,12 @@ listelems	::= COMMA expr listelems
 
 /*------------------------------------*/
 
-//
-
 /*---- TYPES ----*/
 
 typedef		::= TDEF ID COLON typefield typefields SEMI
 	;
 
-typefields	::= typefield typefields
+typefields	::= COMMA typefield typefields
 			|
 	;
 
@@ -138,49 +135,6 @@ value 		::= INTEGER_LITERAL
 			| ID DOT ID
 	;
 
-/*************************
-prim_not_bool_value
-			| boolean_val
-			| aggregate_val
-			| function_call // return value from a function
-	;
-
-prim_not_bool_value	::= numeric_val
-					| char_val
-	;
-
-char_val	::= CHARACTER_LITERAL
-			| val_from_index
-			| ID
-	;
-
-numeric_val	::= INTEGER_LITERAL // literals
-			| FLOAT_LITERAL
-			| MINUS numeric_val // negative numbers
-			| numeric_val numeric_oper numeric_val // operations on numbers
-			| numeric_vals_from_aggs // len(a), a[i], etc.
-			| ID
-	;
-
-boolean_val ::= BOOLEAN_LITERAL
-			| expr
-			| ID
-	;
-
-aggregate_val	::= dict_val
-				| seq_val
-	;
-
-dict_val	::= dictassign
-			| ID
-	;
-
-seq_val		::= listassign
-			| STRING_LITERAL
-			| ID
-	;
-*************************/
-
 vals_from_aggs	::= numeric_vals_from_aggs
 				| vals_from_seq
 	;
@@ -192,7 +146,7 @@ numeric_vals_from_aggs	::= LEN LPAREN ID RPAREN // len(d);
 val_from_index	::= ID LBRACK value RBRACK // a[i]; d[k];
 	;
 
-vals_from_seq	::= seq_val CONCAT seq_val // list :: list;
+vals_from_seq	::= value CONCAT value // list :: list;
 				| ID LBRACK splice RBRACK // list[i:j]; list[:j]; list[i:];
 	;
 
@@ -232,16 +186,19 @@ block	::= LBRACE body RBRACE
 body	::= statement_list
 	;
 
-function_body	::= body RETURN value SEMI
+function_body	::= body RETURN return_value SEMI
 	;
+
+return_value	::= value
+				|
 
 statement_list	::= statement statement_list
 				 |
 	;
 
-// list possible statements & things. basically general code.
 statement 	::= var_def_with_type
 			| var_def
+			| typedef
 			| control_statement
 			| function_call
 			| read
@@ -291,42 +248,10 @@ oper 	::= PLUS
 		| LTEQ
 	;
 
-/*************************
-numeric_oper ::= PLUS
-			| MINUS
-			| MULT
-			| DIV
-			| POW
-	;
-
-dict_seq_bool_oper	::= value IN ID
-	;
-
-bool_oper ::= EQEQ
-			| NOTEQ
-			| AND
-	;
-
-prim_not_bool_comparison	::= LT
-							| LTEQ
-							| EQEQ
-							| NOTEQ
-	;
-
-*************************/
-
 expr 	::= value
 		| expr oper expr
 		| NOT expr
 	;
-
-/*************************
-expr	::= BOOLEAN_LITERAL
-		| NOT expr
-		| prim_not_bool_value prim_not_bool_comparison prim_not_bool_value
-		| boolean_val bool_oper boolean_val
-	;
-*************************/
 
 /*------------------------------------*/
 
