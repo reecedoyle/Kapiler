@@ -8,7 +8,7 @@ void main
 		string sd = "rekt";
 		//list series = [1,2,3] :: otherList;
 	}
-	char c = 'a';
+	x = foo();
 	/* THIS IS A BIG-ASS COMMENT
 
 
