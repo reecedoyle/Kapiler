@@ -212,13 +212,13 @@ varassign	::= listdef
 				| var_def
 				| typedef
 				| control_statement
-				| function_call
+				| function_call SEMI
 				| read
 				| print
 				
 		;
 
-	function_call	::= ID LPAREN actual_param_list_opt RPAREN SEMI
+	function_call	::= ID LPAREN actual_param_list_opt RPAREN
 		;
 
 	control_statement ::= if_statement
