@@ -1,7 +1,7 @@
 
 tdef reece : name:string, age:int;
 
-void main
+void main 
 {
 	
 	while(true) do{
@@ -12,11 +12,13 @@ void main
 	Person kapil = "name", "age", "hey";
 	/* THIS IS A BIG-ASS COMMENT
 
-
+	int variable = (7*9++));
 
 	YO
 
 	*/
-	
-	int SUPERHOT = 5;
+	int variable = [|90:'c', 98098:"hey", x:89|];
+	int sUPERHOT = 5;
+	f.children = f.children :: [c3];
+	return;
 }

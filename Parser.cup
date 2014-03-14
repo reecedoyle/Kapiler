@@ -24,7 +24,7 @@
 
 	terminal TDEF, DEF, VOID, IN, IF, ELSE, FOREACH, WHILE, DO, RETURN, READ, PRINT, CHAR, BOOLEAN, INT, FLOAT, STRING, LIST, DICT, MAIN, LPAREN, RPAREN, LBRACE, RBRACE, LBRACK, RBRACK, LDICT, RDICT, SEMI, COMMA, DOT, EQ, AND, PLUS, MINUS, MULT, DIV, POW, CONCAT, EQEQ, LT, LTEQ, NOTEQ, COLON, BOOLEAN_LITERAL, INTEGER_LITERAL, FLOAT_LITERAL, ID, STRING_LITERAL, CHARACTER_LITERAL, LEN, NOT;
 
-	non terminal program, main, decllist, decl, funcdef, void_funcdef, var_def_with_type, varinit, var_def, varassign, dictassign, dictdef, dictelems, dictelem, listassign, listdef, listelems, typedef, typefields, typefield, type, primitive_type, aggregate_type, value, vals_from_aggs, numeric_vals_from_aggs, val_from_index, vals_from_seq, splice, formal_param_list_opt, formal_param_list, actual_param_list_opt, actual_param_list, block, body, statement_list, statement, function_call, control_statement, if_statement, else_statement, while_statement, foreach_statement, expr, print, read, oper, function_body, void_function_body, return_value, ids;
+	non terminal program, main, decllist, decl, funcdef, void_funcdef, var_def_with_type, varinit, var_def, varassign, dictassign, dictdef, dictelems, dictelem, listassign, listdef, listelems, typedef, typefields, typefield, type, primitive_type, aggregate_type, value, vals_from_aggs, numeric_vals_from_aggs, val_from_index, vals_from_seq, splice, formal_param_list_opt, formal_param_list, actual_param_list_opt, actual_param_list, block, body, statement_list, statement, function_call, control_statement, if_statement, else_statement, while_statement, foreach_statement, expr, print, read, oper, function_body, void_function_body, ids;
 
 	precedence left EQEQ, LTEQ, NOTEQ, LT, AND, IN, CONCAT;
 	precedence left PLUS, MINUS;
@@ -34,7 +34,7 @@
 	program		::= decllist main decllist	{: System.out.println("-------end of parsing-------"); :}
 		;
 
-	main		::= VOID MAIN block
+	main		::= VOID MAIN LBRACE void_function_body RBRACE
 		;
 
 	decllist	::= decl decllist
@@ -135,7 +135,7 @@ varassign	::= listdef
 				| STRING_LITERAL
 				| dictassign
 				| listassign
-				| vals_from_aggs // idk what to do with this
+				| vals_from_aggs
 				| function_call
 				| ids
 		;
@@ -195,17 +195,12 @@ varassign	::= listdef
 	body	::= statement_list
 		;
 
-	function_body	::= body RETURN return_value SEMI
+	function_body	::= body RETURN expr SEMI
 		;
 
-	void_function_body ::= body RETURN VOID SEMI
-						|  body
+	void_function_body ::= body
 						|  body RETURN SEMI
 		;
-
-	return_value	::= expr
-					|
-	;
 
 	statement_list	::= statement statement_list
 					 |
@@ -265,6 +260,7 @@ varassign	::= listdef
 
 	expr 	::= value
 			| expr oper expr
+			| LPAREN expr RPAREN
 			| NOT expr
 		;
 

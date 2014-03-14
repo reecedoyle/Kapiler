@@ -13,8 +13,8 @@ main {
   float s2 = sum(10.0,-20.0);
   bool b;
 
-  if (s1 < s2 || s1 == s2) {
-     b  =  s1 + s2 / (s1 + s2) >= 30;
+  if (s1 < s2 && s1 == s2) {
+     b  =  s1 + s2 / (s1 + s2) <= 30;
   } else {
      /* do something else */
   }
