@@ -6,7 +6,7 @@ public class QC{
     	    /* init the automatically generated parser from calc.cup */
 	        Parser myParser = new Parser(myScanner);
  	         /* parse the input program from stdin */
- 	         myParser.parse();
+ 	         myParser.debug_parse();
 
 	}
 }
