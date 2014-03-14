@@ -3,7 +3,8 @@ INSTRUCTIONS FOR RUNNING THE KAPILER
 Ensure you have JFlex.jar and java-cup-11a.jar in the folder with the .cup and .jflex files
 
 To compile and run:
-java -jar JFlex.jar Scanner.jflex  //produce the Scanner.java code
-java -jar java-cup-11a.jar -parser Parser Parser.cup  //producd the Parser.java code
-javac -cp java-cup-11a.jar Parser.java Scanner.java sym.java QC.java //compile all the java files
-NO IDEA HOW TO RUN IT :(
+make //compile everything
+java -cp .:java-cup-11a.jar QC < [input file] //lex and parse a file
+
+To delete compiled files:
+make clean

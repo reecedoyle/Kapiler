@@ -1,6 +1,7 @@
 /*This is a comment*/
 //this program is syntactically correct so should lex and parse fine :) +_+
 
+
 void main {
 	list a = [1,2,3]; 
 	list b;
