@@ -1,11 +1,9 @@
-package Kapiler;
-
+package hello;
 import java_cup.runtime.*;
 
 terminal TDEF, DEF, VOID, IN, IF, ELSE, FOREACH, WHILE, DO, RETURN, READ, PRINT, CHAR, BOOLEAN, INT, FLOAT, STRING, LIST, DICT, MAIN, LPAREN, RPAREN, LBRACE, RBRACE, LBRACK, RBRACK, LDICT, RDICT, SEMI, COMMA, DOT, EQ, AND, PLUS, MINUS, MULT, DIV, POW, CONCAT, EQEQ, LT, LTEQ, NOTEQ, COLON, BOOLEAN_LITERAL, INTEGER_LITERAL, FLOAT_LITERAL, ID, STRING_LITERAL, CHARACTER_LITERAL, LEN, NOT;
 
 non terminal program, main, decllist, decl, funcdef, var_def_with_type, varinit, var_def, varassign, dictassign, dictdef, dictelems, dictelem, listassign, listdef, listelems, typedef, typefields, typefield, type, primitive_type, aggregate_type, value, seq_val, vals_from_aggs, numeric_vals_from_aggs, val_from_index, vals_from_seq, splice, formal_param_list_opt, formal_param_list, actual_param_list_opt, actual_param_list, block, body, statement_list, statement, function_call, control_statement, if_statement, else_statement, while_statement, foreach_statement, expr, print, read, oper, function_body;
-
 
 precedence left EQEQ, LTEQ, NOTEQ, LT, AND, IN;
 precedence left PLUS, MINUS;
@@ -211,13 +209,13 @@ block	::= LBRACE body RBRACE
 	;
 
 body	::= statement_list
-		|
 	;
 
 function_body	::= body RETURN value SEMI
 	;
 
 statement_list	::= statement statement_list
+				 |
 	;
 
 // list possible statements & things. basically general code.
@@ -227,6 +225,7 @@ statement 	::= var_def_with_type
 			| function_call
 			| read
 			| print
+			
 	;
 
 function_call	::= ID LPAREN actual_param_list_opt RPAREN SEMI

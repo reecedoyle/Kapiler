@@ -1,13 +1,11 @@
-package Kapiler;
-
+package hello;
 import java_cup.runtime.*;
 
 %%
 
 %cup
-%class Scanner
 %unicode
-%cup
+%class HelloLex
 %line
 %column
 %{
@@ -25,8 +23,8 @@ import java_cup.runtime.*;
 %eofval}
 
 /* MACROS */
-LineTerminator 		= \r\n?|\n
-WhiteSpace 			= \s*
+LineTerminator 		= \r|\n|\r\n
+WhiteSpace 			= {LineTerminator} | [ \t\f]
 Comment 			= {EndOfLineComment} | {MultiLineComment}
 EndOfLineComment	= "//".*
 MultiLineComment	= "/*"(.|[\r\n])*?"*/"
@@ -110,7 +108,7 @@ SingleCharacter		= [^\r\n\'\\]
 	\'					{ yybegin(CHAR_STATE);}
 
 	/* String Literal */
-	\"					{ yybegin(STRING_STATE); string.setLength(0);}
+	\"					{ yybegin(STRING_STATE);}
 
 	/* OTHERS */
 	/* Comments */
@@ -121,6 +119,8 @@ SingleCharacter		= [^\r\n\'\\]
 
 	/* Comments */
 	{Identifier}		{ return symbol(sym.ID, yytext());}
+	
+	
 }
 
 <STRING_STATE> {
@@ -139,7 +139,7 @@ SingleCharacter		= [^\r\n\'\\]
 	"\\\\"				{ string.append('\\');}
 	
 	/* Error Catch */
-	\\.					{ System.err.printlin("Error in line "+yyline+": Illegal escape character \""+yytext()+"\"");}
+	\\.					{ System.err.println("Error in line "+yyline+": Illegal escape character \""+yytext()+"\"");}
 	
 }
 
