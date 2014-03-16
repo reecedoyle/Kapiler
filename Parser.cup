@@ -4,7 +4,7 @@
 	parser code {:
 		public void syntax_error(Symbol cur_token){
 			String state = cur_token.toString();
-			report_error(state, null);
+			report_error(state, cur_token);
 		}
 		
 		public void report_error(String message, Object info){
@@ -33,7 +33,7 @@
 	precedence left MULT, DIV;
 	precedence left POW;
 
-	program		::= decllist main decllist	{: System.out.println("-------end of parsing-------\nparsing successful”"); :}
+	program		::= decllist main decllist	{: System.out.println("-------end of parsing-------\nparsing successful"); :}
 				| error {: System.out.println("-------end of parsing-------\nparsing unsuccessful”"); :}
 		;
 
