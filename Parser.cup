@@ -2,6 +2,123 @@
 	import java_cup.runtime.*;
 
 	parser code {:
+
+		public String getErrorMessage(String symbolNum){
+			int n = Integer.parseInt(symbolNum.replaceAll("#", ""));
+
+			switch(n){
+				case 0:
+					return "expected token at end of file";
+				case 1:
+					return "unidentified error";
+				case 2:
+					return "unexpected keyword typedef";
+				case 3:
+					return "unexpected keyword def";
+				case 4:
+					return "unexpected keyword void";
+				case 5:
+					return "unexpected keyword in";
+				case 6:
+					return "unexpected keyword if";
+				case 7:
+					return "unexpected keyword else";
+				case 8:
+					return "unexpected keyword foreach";
+				case 9:
+					return "unexpected keyword while";
+				case 10:
+					return "unexpected keyword do";
+				case 11:
+					return "unexpected keyword return";
+				case 12:
+					return "unexpected function call read";
+				case 13:
+					return "unexpected function call print";
+				case 14:
+					return "unexpected keyword char";
+				case 15:
+					return "unexpected keyword boolean";
+				case 16:
+					return "unexpected keyword int";
+				case 17:
+					return "unexpected keyword float";
+				case 18:
+					return "unexpected keyword string";
+				case 19:
+					return "unexpected keyword list";
+				case 20:
+					return "unexpected keyword dict";
+				case 21:
+					return "unexpected keyword main";
+				case 22:
+					return "unexpected (";
+				case 23:
+					return "unexpected )";
+				case 24:
+					return "unexpected {";
+				case 25:
+					return "unexpected }";
+				case 26:
+					return "unexpected [";
+				case 27:
+					return "unexpected ]";
+				case 28:
+					return "unexpected [|";
+				case 29:
+					return "unexpected |]";
+				case 30:
+					return "unexpected semi colon";
+				case 31:
+					return "unexpected comma";
+				case 32:
+					return "unexpected dot";
+				case 33:
+					return "unexpected =";
+				case 34:
+					return "unexpected &&";
+				case 35:
+					return "unexpected +";
+				case 36:
+					return "unexpected -";
+				case 37:
+					return "unexpected *";
+				case 38:
+					return "unexpected /";
+				case 39:
+					return "unexpected ^";
+				case 40:
+					return "unexpected ::";
+				case 41:
+					return "unexpected ==";
+				case 42:
+					return "unexpected <";
+				case 43:
+					return "unexpected <=";
+				case 44:
+					return "unexpected !=";
+				case 45:
+					return "unexpected :";
+				case 46:
+					return "unexpected boolean literal";
+				case 47:
+					return "unexpected integer literal";
+				case 48:
+					return "unexpected float literal";
+				case 49:
+					return "unexpected identifier";
+				case 50:
+					return "unexpected string";
+				case 51:
+					return "unexpected char literal";
+				case 52:
+					return "unexpected len function call";
+				case 53:
+					return "unexpected !";
+			}
+			return "Unknown Error";
+		}
+
 		public void syntax_error(Symbol cur_token){
 			String state = cur_token.toString();
 			report_error(state, cur_token);
@@ -16,7 +133,7 @@
 					m.append(" in line "+(s.left+1));
 				}
 			}
-			m.append(": rule \""+message+"\" violated");
+			m.append(": "+getErrorMessage(message));
 			System.err.println(m);
 		}
 		public void report_fatal_error(String message, Object info) {
@@ -34,7 +151,7 @@
 	precedence left POW;
 
 	program		::= decllist main decllist	{: System.out.println("-------end of parsing-------\nparsing successful"); :}
-				| error {: System.out.println("-------end of parsing-------\nparsing unsuccessful”"); :}
+				| error {: System.out.println("-------end of parsing-------\nparsing unsuccessful"); :}
 		;
 
 	main		::= VOID MAIN LBRACE void_function_body RBRACE
