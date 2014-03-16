@@ -2,7 +2,7 @@ list l1 = ["a","b", "c", "d", "e"];
 list l2 = [1,2,3,4,5];
  
 string s1 = "";
-string s2 = "hello";
+string s2 = "hello";;
 
 void main
 {

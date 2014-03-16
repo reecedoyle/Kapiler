@@ -2,8 +2,10 @@
 	import java_cup.runtime.*;
 
 	parser code {:
-
-		public String rule;
+		public void syntax_error(Symbol cur_token){
+			String state = cur_token.toString();
+			report_error(state, null);
+		}
 		
 		public void report_error(String message, Object info){
 
@@ -14,7 +16,7 @@
 					m.append(" in line "+(s.left+1));
 				}
 			}
-			m.append(": rule \""+rule+"\" violated");
+			m.append(": rule \""+message+"\" violated");
 			System.err.println(m);
 		}
 		public void report_fatal_error(String message, Object info) {
@@ -31,7 +33,8 @@
 	precedence left MULT, DIV;
 	precedence left POW;
 
-	program		::= decllist main decllist	{: System.out.println("-------end of parsing-------"); :}
+	program		::= decllist main decllist	{: System.out.println("-------end of parsing-------\nparsing successful”"); :}
+				| error {: System.out.println("-------end of parsing-------\nparsing unsuccessful”"); :}
 		;
 
 	main		::= VOID MAIN LBRACE void_function_body RBRACE

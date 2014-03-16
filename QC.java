@@ -14,7 +14,7 @@ public class QC{
         		myScanner = new Scanner(System.in);
         	}
 	        Parser myParser = new Parser(myScanner);
- 	        myParser.debug_parse();
+ 	        myParser.parse();
 
 	}
 }
