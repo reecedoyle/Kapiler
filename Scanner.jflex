@@ -24,9 +24,6 @@ import java_cup.runtime.*;
 /* MACROS */
 LineTerminator 		= \r|\n|\r\n
 WhiteSpace 			= {LineTerminator} | [ \t\f]
-Comment 			= {EndOfLineComment} | {MultiLineComment}
-EndOfLineComment	= "//".*
-MultiLineComment	= "/*"(.|[\r\n])*?"*/"
 
 Identifier			= [:jletter:][:jletterdigit:]*
 IntegerLiteral 		= 0 | [1-9][0-9]*
@@ -34,7 +31,7 @@ FloatLiteral 		= [0-9]+ \. [0-9]*
 StringCharacter 	= [^\r\n\"\\]
 SingleCharacter		= [^\r\n\'\\]
 
-%state STRING_STATE CHAR_STATE
+%state STRING_STATE CHAR_STATE SL_COMMENT ML_COMMENT
 
 %%
 
@@ -111,7 +108,8 @@ SingleCharacter		= [^\r\n\'\\]
 
 	/* OTHERS */
 	/* Comments */
-	{Comment}			{ /* ignore */ }
+	"//"				{ yybegin(SL_COMMENT);}
+	"/*"				{ yybegin(ML_COMMENT);}
 
 	/* White Space */
 	{WhiteSpace}		{ /* ignore */ }
@@ -119,6 +117,20 @@ SingleCharacter		= [^\r\n\'\\]
 	/* Comments */
 	{Identifier}		{ return symbol(sym.ID, yytext());}
 	
+	
+}
+
+<SL_COMMENT> {
+
+	{LineTerminator}	{ yybegin(YYINITIAL);}
+	.					{ /* Ignore comment */ }
+	
+}
+
+<ML_COMMENT> {
+
+	"*/"				{ yybegin(YYINITIAL);}
+	. | [\r\n]	{ /* Ignore comment */ }
 	
 }
 

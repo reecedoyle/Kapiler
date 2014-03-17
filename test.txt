@@ -1,24 +1,32 @@
-
+def int function(int x, char c){
+	x=x*2;
+	return c;
+}
 tdef reece : name:string, age:int;
 
-void main 
+void /* int 
+
+*/  main 
 {
 	
 	while(true) do{
 		string sd = "rekt";
 		//list series = [1,2,3] :: otherList;
 	}
+	bar();
 	x = foo();
-	Person kapil = "name", "age", "hey";
-	/* THIS IS A BIG-ASS COMMENT
+	Person kapil = "name", "age", 23203;
+/*
 
-	int variable = (7*9++));
+	// HEY
+	//HEY
+	//YOU
+	//YOU
+	//I DONT LIKE YOUR
+	//PARSER*/
 
-	YO
-
-	*/
-	int variable = [|90:'c', 98098:"hey", x:89|];
-	int sUPERHOT = 5;
+	dict variable = [|90:'c', 98098:"hey", x:89|];
+	int SUPERHOT = 5;
 	f.children = f.children :: [c3];
 	return;
 }

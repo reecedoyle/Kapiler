@@ -19,7 +19,7 @@ parser: Parser.cup
 	java -jar java-cup-11a.jar -parser Parser Parser.cup
   
 clean:
-	rm -f *.class Parser.java sym.java Scanner.java
+	rm -f *.class Parser.java sym.java Scanner.java Scanner.java~
 
 
 
