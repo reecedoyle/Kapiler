@@ -1,4 +1,4 @@
-INSTRUCTIONS FOR RUNNING THE KAPILER
+INSTRUCTIONS FOR RUNNING
 
 Ensure you have JFlex.jar and java-cup-11a.jar in the folder with the .cup and .jflex files
 
