@@ -4,7 +4,7 @@ Ensure you have JFlex.jar and java-cup-11a.jar in the folder with the .cup and .
 
 To compile and run:
 make //compile everything
-java -cp .:java-cup-11a.jar QC < [input file] //lex and parse a file
+java -cp .:java-cup-11a.jar QC [input file] //lex and parse a file
 
 To delete compiled files:
 make clean
