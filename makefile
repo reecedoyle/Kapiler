@@ -1,12 +1,3 @@
-#
-# A simple parser for map directions v1.0
-# Yue Jia @ CREST, UCL - yue.jia@ucl.ac.uk
-#
-# Adapted from the cup minimal example at
-# http://www2.cs.tum.edu/projects/cup/minimal.tar.gz
-# 
-
-
 all: scanner parser qc
 
 qc: QC.java
